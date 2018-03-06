@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">EAT-AT-SFO</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="GPSAlertDialogTitle">GPS is setting</string>
+    <string name="GPSAlertDialogMessage">GPS is not enabled. Do you want to go to setting menu</string>
+    <string name="action_settings">Settings</string>
+    <string name="settings">Settings</string>
+    <string name="cancel">Cancel</string>
 </resources>

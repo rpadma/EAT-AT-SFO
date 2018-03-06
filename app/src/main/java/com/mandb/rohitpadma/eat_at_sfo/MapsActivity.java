@@ -6,6 +6,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -24,6 +26,7 @@ import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.IPlaceApi;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.PlaceService;
+import com.mandb.rohitpadma.eat_at_sfo.util.GPSTracker;
 import com.mandb.rohitpadma.eat_at_sfo.util.Utility;
 
 import java.util.HashMap;
@@ -39,7 +42,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private IPlaceApi _placeservice;
     private UiSettings mUiSettings;
     HashMap<Marker,Result> hmap=new HashMap<>();
-
+    LatLng currentlocation=null;
     LatLngBounds.Builder b = new LatLngBounds.Builder();
 
     @Override
@@ -52,6 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         _placeservice = (IPlaceApi) PlaceService.provideUserRestService();
 
+        currentlocation=Utility.getcurrentlocation();
        if(Utility.isNetworkConnected()) {
 
            fetchdata();
@@ -81,7 +85,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap = googleMap;
 
-        LatLng sydney = new LatLng(AppConfiguration.lat, AppConfiguration.lng);
+        LatLng sydney = currentlocation; //new LatLng(AppConfiguration.lat, AppConfiguration.lng);
+
        Marker current= mMap.addMarker(new MarkerOptions().position(sydney)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title("your location"));
        current.showInfoWindow();
@@ -96,6 +101,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+
+
 
     public void showRestaurant(Result r)
     {
@@ -173,7 +180,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
 
 
-        Call<PlaceMarker> call=_placeservice.fetchPlaces(String.valueOf(AppConfiguration.lat)+","+String.valueOf(AppConfiguration.lng),
+        Call<PlaceMarker> call=_placeservice.fetchPlaces(String.valueOf(currentlocation.latitude)+","+String.valueOf(currentlocation.longitude),
                 AppConfiguration.radius,AppConfiguration.placetype,AppConfiguration.Key);
         call.enqueue(new Callback<PlaceMarker>() {
             @Override
