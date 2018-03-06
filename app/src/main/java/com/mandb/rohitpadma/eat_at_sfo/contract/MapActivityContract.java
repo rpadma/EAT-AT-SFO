@@ -21,12 +21,8 @@ public interface MapActivityContract {
     interface Presenter extends BasePresenter<View> {
 
         void setMap(GoogleMap map);
-
         GoogleMap getmMap();
-
         void drawMap();
-
-//        void drawRoute(double latitude, double longitude, Marker marker);
 
     }
 

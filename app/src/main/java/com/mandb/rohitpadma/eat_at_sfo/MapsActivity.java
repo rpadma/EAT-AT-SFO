@@ -2,9 +2,11 @@ package com.mandb.rohitpadma.eat_at_sfo;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,6 +24,7 @@ import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.IPlaceApi;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.PlaceService;
+import com.mandb.rohitpadma.eat_at_sfo.util.Utility;
 
 import java.util.HashMap;
 
@@ -49,32 +52,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         _placeservice = (IPlaceApi) PlaceService.provideUserRestService();
 
+       if(Utility.isNetworkConnected()) {
 
-        fetchdata();
+           fetchdata();
+       }
+       else
+       {
+           Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show();
+
+       }
     }
 
-    public void fetchdata()
-    {
 
-
-        Call<PlaceMarker> call=_placeservice.fetchPlaces(String.valueOf(AppConfiguration.lat)+","+String.valueOf(AppConfiguration.lng),
-                "5000","restaurant","AIzaSyBcLZtBC-2jSDG8iiZpECV_yWpUqaGeDTk");
-call.enqueue(new Callback<PlaceMarker>() {
-    @Override
-    public void onResponse(Call<PlaceMarker> call, Response<PlaceMarker> response) {
-
-        placeMarkerList=response.body();
-
-        setMarker(placeMarkerList);
-    }
-
-    @Override
-    public void onFailure(Call<PlaceMarker> call, Throwable t) {
-
-    }
-});
-
-    }
 
 
     /**
@@ -92,10 +81,7 @@ call.enqueue(new Callback<PlaceMarker>() {
 
         mMap = googleMap;
 
-
-        // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(AppConfiguration.lat, AppConfiguration.lng);
-
         mMap.addMarker(new MarkerOptions().position(sydney)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title("your location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
@@ -109,7 +95,7 @@ call.enqueue(new Callback<PlaceMarker>() {
 
     }
 
-    public void showRest(Result r)
+    public void showRestaurant(Result r)
     {
         Bundle b=new Bundle();
         b.putParcelable("marker",r);
@@ -169,18 +155,36 @@ call.enqueue(new Callback<PlaceMarker>() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-
                 Result r=hmap.get(marker);
-
-                showRest(r);
-                // Toast.makeText(MapsActivity.this,r.getName()+" "+r.getPlaceId(),Toast.LENGTH_SHORT).show();
+                showRestaurant(r);
                 return false;
             }
         });
     }
 
 
+    public void fetchdata()
+    {
 
+
+        Call<PlaceMarker> call=_placeservice.fetchPlaces(String.valueOf(AppConfiguration.lat)+","+String.valueOf(AppConfiguration.lng),
+                AppConfiguration.radius,AppConfiguration.placetype,AppConfiguration.Key);
+        call.enqueue(new Callback<PlaceMarker>() {
+            @Override
+            public void onResponse(Call<PlaceMarker> call, Response<PlaceMarker> response) {
+
+                placeMarkerList=response.body();
+
+                setMarker(placeMarkerList);
+            }
+
+            @Override
+            public void onFailure(Call<PlaceMarker> call, Throwable t) {
+
+            }
+        });
+
+    }
 
 
 }
