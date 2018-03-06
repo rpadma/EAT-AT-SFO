@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MainActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
                         logoTimer=logoTimer+100;
                     }
 
-                    Intent i=new Intent(MainActivity.this,MapsActivity.class);
+                    Intent i=new Intent(SplashActivity.this,MapsActivity.class);
                     startActivity(i);
 
                 }catch (Exception e) {

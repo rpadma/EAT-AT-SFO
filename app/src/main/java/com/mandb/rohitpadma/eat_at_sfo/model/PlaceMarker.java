@@ -1,9 +1,7 @@
-package com.mandb.rohitpadma.eat_at_sfo.Model;
+package com.mandb.rohitpadma.eat_at_sfo.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.io.Serializable;
 
 /**
  * Created by rohitpadma on 3/5/18.
