@@ -40,4 +40,6 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp-urlconnection:${okhttpVersion}"
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 
+
+
 }

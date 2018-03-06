@@ -1,15 +1,10 @@
 package com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService;
 
-import com.mandb.rohitpadma.eat_at_sfo.model.Example;
-import com.mandb.rohitpadma.eat_at_sfo.model.PlaceMarker;
+import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
+import com.mandb.rohitpadma.eat_at_sfo.model.restaurantpojo.Restaurant;
 
-import java.util.List;
-
-import io.reactivex.Observable;
 import retrofit2.Call;
-import retrofit2.http.Field;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -20,12 +15,15 @@ public interface IPlaceApi {
 
 
     @GET("nearbysearch/json")
-    Call<Example> fetchPlaces(@Query("location") String location,
-                              @Query("radius") String radius,
-                              @Query("type") String type,
-                              @Query("key") String key
+    Call<PlaceMarker> fetchPlaces(@Query("location") String location,
+                                  @Query("radius") String radius,
+                                  @Query("type") String type,
+                                  @Query("key") String key
                                               );
 
+    @GET("details/json")
+    Call<Restaurant> fetchRestaurantDetails(@Query("placeid")String placeid,
+                                            @Query("key") String key);
 
 }
 

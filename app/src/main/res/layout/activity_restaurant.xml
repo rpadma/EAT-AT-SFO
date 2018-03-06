@@ -4,6 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mandb.rohitpadma.eat_at_sfo.RestaurantActivity">
+    tools:context="com.mandb.rohitpadma.eat_at_sfo.RestaurantActivity"
+    android:orientation="vertical"
+    >
+
+    <include layout="@layout/content_restaurant"></include>
 
 </android.support.constraint.ConstraintLayout>

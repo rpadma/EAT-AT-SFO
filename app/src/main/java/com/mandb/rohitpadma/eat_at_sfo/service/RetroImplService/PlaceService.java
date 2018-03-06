@@ -1,20 +1,11 @@
 package com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService;
 
-import android.text.TextUtils;
-
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
-import com.mandb.rohitpadma.eat_at_sfo.model.PlaceMarker;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import static java.lang.String.format;
@@ -27,7 +18,7 @@ public class PlaceService {
 
 
 
-    private static String BASE_API_URL = "https://maps.googleapis.com/maps/api/place/";
+    private static String BASE_API_URL = AppConfiguration.BASE_API_URL;
     private static OkHttpClient mOkHttpClient;
     private static Retrofit mRetrofitInstance;
     private static IPlaceApi iPlaceApi;

@@ -1,15 +1,10 @@
 package com.mandb.rohitpadma.eat_at_sfo;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,34 +17,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mandb.rohitpadma.eat_at_sfo.R;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
-import com.mandb.rohitpadma.eat_at_sfo.model.Example;
-import com.mandb.rohitpadma.eat_at_sfo.model.Location;
-import com.mandb.rohitpadma.eat_at_sfo.model.PlaceMarker;
-import com.mandb.rohitpadma.eat_at_sfo.model.Result;
+import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
+import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.IPlaceApi;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.PlaceService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback  {
 
     private GoogleMap mMap;
-    public Example placeMarkerList;
+    public PlaceMarker placeMarkerList;
     private IPlaceApi _placeservice;
     private UiSettings mUiSettings;
     HashMap<Marker,Result> hmap=new HashMap<>();
@@ -64,7 +47,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         _placeservice = (IPlaceApi) PlaceService.provideUserRestService();
 
 
@@ -75,11 +57,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
 
 
-        Call<Example> call=_placeservice.fetchPlaces(String.valueOf(AppConfiguration.lat)+","+String.valueOf(AppConfiguration.lng),
+        Call<PlaceMarker> call=_placeservice.fetchPlaces(String.valueOf(AppConfiguration.lat)+","+String.valueOf(AppConfiguration.lng),
                 "5000","restaurant","AIzaSyBcLZtBC-2jSDG8iiZpECV_yWpUqaGeDTk");
-call.enqueue(new Callback<Example>() {
+call.enqueue(new Callback<PlaceMarker>() {
     @Override
-    public void onResponse(Call<Example> call, Response<Example> response) {
+    public void onResponse(Call<PlaceMarker> call, Response<PlaceMarker> response) {
 
         placeMarkerList=response.body();
 
@@ -87,7 +69,7 @@ call.enqueue(new Callback<Example>() {
     }
 
     @Override
-    public void onFailure(Call<Example> call, Throwable t) {
+    public void onFailure(Call<PlaceMarker> call, Throwable t) {
 
     }
 });
@@ -114,7 +96,8 @@ call.enqueue(new Callback<Example>() {
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(AppConfiguration.lat, AppConfiguration.lng);
 
-        mMap.addMarker(new MarkerOptions().position(sydney).title("your location"));
+        mMap.addMarker(new MarkerOptions().position(sydney)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title("your location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         b.include(sydney);
 
@@ -122,23 +105,11 @@ call.enqueue(new Callback<Example>() {
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-
-
-                Result r=hmap.get(marker);
-
-                ShowRest(r);
-                // Toast.makeText(MapsActivity.this,r.getName()+" "+r.getPlaceId(),Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
 
 
     }
 
-    public void ShowRest(Result r)
+    public void showRest(Result r)
     {
         Bundle b=new Bundle();
         b.putParcelable("marker",r);
@@ -148,29 +119,35 @@ call.enqueue(new Callback<Example>() {
     }
 
 
-    public void setMarker(Example example)
+    public void setMarker(PlaceMarker example)
     {
         for (Result res:example.getResults()) {
 
             LatLng temp=new LatLng(res.getGeometry().getLocation().getLat(),res.getGeometry().getLocation().getLng());
 
+            if(res!=null && res.getOpeningHours()!=null && res.getOpeningHours().getOpenNow()) {
 
-           final Marker m=mMap.addMarker(
-                    new MarkerOptions()
-                            .position(temp)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                            .title(res.getName()).snippet("fhfhhfdfnnjrnjfrrmjttktkttttm")
+                MarkerOptions mo= new MarkerOptions()
+                        .position(temp)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                        .title(res.getName()).snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
+                final Marker m =
+                        mMap.addMarker(mo);
+                hmap.put(m, res);
+            }
+            else
+            {
+               MarkerOptions mo= new MarkerOptions()
+                        .position(temp)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                        .title(res.getName()).snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
+                final Marker m =
+                        mMap.addMarker(mo);
 
+                hmap.put(m, res);
 
-            );
-
-           if(m!=null && res!=null) {
-               hmap.put(m, res);
-           }
+            }
             b.include(temp);
-
-
-
 
         }
 
@@ -186,6 +163,20 @@ call.enqueue(new Callback<Example>() {
             return;
         }
         mMap.setMyLocationEnabled(true);
+
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+
+                Result r=hmap.get(marker);
+
+                showRest(r);
+                // Toast.makeText(MapsActivity.this,r.getName()+" "+r.getPlaceId(),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
     }
 
 

@@ -1,4 +1,4 @@
-package com.mandb.rohitpadma.eat_at_sfo.model;
+package com.mandb.rohitpadma.eat_at_sfo.model.markerpojo;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by rohitpadma on 3/6/18.
  */
 
-public class Example {
+public class PlaceMarker {
 
     @SerializedName("html_attributions")
     @Expose

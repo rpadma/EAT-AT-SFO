@@ -2,8 +2,7 @@ package com.mandb.rohitpadma.eat_at_sfo.contract;
 
 import com.mandb.rohitpadma.eat_at_sfo.base.BasePresenter;
 import com.mandb.rohitpadma.eat_at_sfo.base.BaseView;
-import com.mandb.rohitpadma.eat_at_sfo.model.PlaceMarker;
-import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.PlaceService;
+import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
 
 import java.util.List;
 
@@ -14,17 +13,17 @@ import java.util.List;
 public interface SplashActivityContract {
     interface View extends BaseView {
 
-        void showPlaceMarker(List<PlaceMarker> placeMarkerList);
-        void showNoNetworkMessage();
+       // void showPlaceMarker(List<PlaceMarker> placeMarkerList);
+        //void showNoNetworkMessage();
 
     }
 
 
     interface Presenter extends BasePresenter<View> {
 
-        void fetchNetwork(String type);
+        //void fetchNetwork(String type);
 
-        void checkNetworkAvailable();
+        //void checkNetworkAvailable();
 
 
     }
