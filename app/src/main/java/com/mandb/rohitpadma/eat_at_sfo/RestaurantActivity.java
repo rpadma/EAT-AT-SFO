@@ -52,8 +52,10 @@ public class RestaurantActivity extends AppCompatActivity implements Imagedapter
     ImageView rcall;
     @BindView(R.id.ReviewList)
     ListView reviewlist;
-
-    private RecyclerView photolist;
+    @BindView(R.id.rvlist)
+    RecyclerView photolist;
+    @BindView(R.id.RestaurantAddress)
+    TextView raddress;
     ReviewAdapter ra;
 
 
@@ -113,7 +115,7 @@ public class RestaurantActivity extends AppCompatActivity implements Imagedapter
 
         rname.setText(restaurant.getResult().getName());
         rrating.setRating(Float.valueOf(restaurant.getResult().getRating()));
-
+        raddress.setText(restaurant.getResult().getFormatted_address());
 
         ra = new ReviewAdapter(this, R.layout.childreviewlayout,restaurant.getResult().getReviews());
         ra.setNotifyOnChange(true);

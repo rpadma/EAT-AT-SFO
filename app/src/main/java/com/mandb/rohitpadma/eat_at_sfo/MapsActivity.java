@@ -82,9 +82,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         LatLng sydney = new LatLng(AppConfiguration.lat, AppConfiguration.lng);
-        mMap.addMarker(new MarkerOptions().position(sydney)
+       Marker current= mMap.addMarker(new MarkerOptions().position(sydney)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title("your location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+       current.showInfoWindow();
+       mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
         b.include(sydney);
 
         mUiSettings = mMap.getUiSettings();
@@ -97,11 +99,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void showRestaurant(Result r)
     {
-        Bundle b=new Bundle();
-        b.putParcelable("marker",r);
-        Intent i=new Intent(this,RestaurantActivity.class);
-        i.putExtras(b);
-        startActivity(i);
+        if(r!=null) {
+            Bundle b = new Bundle();
+            b.putParcelable("marker", r);
+            Intent i = new Intent(this, RestaurantActivity.class);
+            i.putExtras(b);
+            startActivity(i);
+        }
     }
 
 
@@ -117,8 +121,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .position(temp)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                         .title(res.getName()).snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
-                final Marker m =
+                 Marker m =
                         mMap.addMarker(mo);
+
                 hmap.put(m, res);
             }
             else
@@ -127,8 +132,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .position(temp)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                         .title(res.getName()).snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
-                final Marker m =
+                Marker m =
                         mMap.addMarker(mo);
+
 
                 hmap.put(m, res);
 

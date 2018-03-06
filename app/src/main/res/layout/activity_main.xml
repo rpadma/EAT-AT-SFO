@@ -12,7 +12,6 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_gravity="center"
         android:gravity="center"
         >
@@ -20,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="100px"
+            android:layout_margin="80px"
             android:src="@drawable/sfolarge"
             />
     </LinearLayout>
