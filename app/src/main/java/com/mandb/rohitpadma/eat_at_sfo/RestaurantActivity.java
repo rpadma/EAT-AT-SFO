@@ -32,6 +32,7 @@ import com.mandb.rohitpadma.eat_at_sfo.model.restaurantpojo.Restaurant;
 import com.mandb.rohitpadma.eat_at_sfo.model.restaurantpojo.Reviews;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.IPlaceApi;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.PlaceService;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -58,11 +59,14 @@ public class RestaurantActivity extends AppCompatActivity implements Imagedapter
     TextView raddress;
     ReviewAdapter ra;
 
+    AlertDialog dialog;
+
 
     Result result;
     Restaurant restaurant;
     private IPlaceApi _placeservice;
-    ArrayList<String> photourls;
+    ArrayList<String> photourls =new ArrayList<>();
+    ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,13 +110,12 @@ public class RestaurantActivity extends AppCompatActivity implements Imagedapter
     public void setview(Restaurant restaurant)
     {
 
-        photourls=new ArrayList<>();
 
-        for(Photos p:restaurant.getResult().getPhotos())
-        {
-            photourls.add(AppConfiguration.BASE_PHOTO_URL+p.getPhoto_reference()+"&key="+AppConfiguration.Key);
+        if(restaurant.getResult().getPhotos()!=null) {
+            for (Photos p : restaurant.getResult().getPhotos()) {
+                photourls.add(AppConfiguration.BASE_PHOTO_URL + p.getPhoto_reference() + "&key=" + AppConfiguration.Key);
+            }
         }
-
         rname.setText(restaurant.getResult().getName());
         rrating.setRating(Float.valueOf(restaurant.getResult().getRating()));
         raddress.setText(restaurant.getResult().getFormatted_address());
@@ -128,7 +131,7 @@ public class RestaurantActivity extends AppCompatActivity implements Imagedapter
 
 
         photolist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
-        Imagedapter ca = new Imagedapter(photourls,this);
+        Imagedapter ca = new Imagedapter(photourls,this,this);
         photolist.setAdapter(ca);
         ca.notifyDataSetChanged();
 
@@ -148,9 +151,19 @@ public class RestaurantActivity extends AppCompatActivity implements Imagedapter
 
 
     @Override
-    public void showPhoto(String position) {
+    public void showPhoto( final int  position) {
+
+
+
+
 
         // need to implement code to show the photo in zoom mode.
 
     }
+
+
+
+
+
+
 }

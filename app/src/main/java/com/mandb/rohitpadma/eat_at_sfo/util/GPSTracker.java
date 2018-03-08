@@ -266,73 +266,13 @@ public class GPSTracker extends Service implements LocationListener {
         return null;
     }
 
-    /**
-     * Try to get AddressLine
-     * @return null or addressLine
-     */
-    public String getAddressLine(Context context) {
-        List<Address> addresses = getGeocoderAddress(context);
 
-        if (addresses != null && addresses.size() > 0) {
-            Address address = addresses.get(0);
-            String addressLine = address.getAddressLine(0);
 
-            return addressLine;
-        } else {
-            return null;
-        }
-    }
 
-    /**
-     * Try to get Locality
-     * @return null or locality
-     */
-    public String getLocality(Context context) {
-        List<Address> addresses = getGeocoderAddress(context);
 
-        if (addresses != null && addresses.size() > 0) {
-            Address address = addresses.get(0);
-            String locality = address.getLocality();
 
-            return locality;
-        }
-        else {
-            return null;
-        }
-    }
 
-    /**
-     * Try to get Postal Code
-     * @return null or postalCode
-     */
-    public String getPostalCode(Context context) {
-        List<Address> addresses = getGeocoderAddress(context);
 
-        if (addresses != null && addresses.size() > 0) {
-            Address address = addresses.get(0);
-            String postalCode = address.getPostalCode();
-
-            return postalCode;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Try to get CountryName
-     * @return null or postalCode
-     */
-    public String getCountryName(Context context) {
-        List<Address> addresses = getGeocoderAddress(context);
-        if (addresses != null && addresses.size() > 0) {
-            Address address = addresses.get(0);
-            String countryName = address.getCountryName();
-
-            return countryName;
-        } else {
-            return null;
-        }
-    }
 
     @Override
     public void onLocationChanged(Location location) {

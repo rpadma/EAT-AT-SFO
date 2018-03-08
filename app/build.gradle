@@ -40,7 +40,7 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp-urlconnection:${okhttpVersion}"
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
-
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile 'com.android.support:design:26.1.0'

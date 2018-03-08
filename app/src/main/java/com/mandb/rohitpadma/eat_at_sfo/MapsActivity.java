@@ -98,8 +98,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
 
-
-
     }
 
 
@@ -127,7 +125,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 MarkerOptions mo= new MarkerOptions()
                         .position(temp)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                        .title(res.getName()).snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
+                        .title(res.getName())
+                        .snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
                  Marker m =
                         mMap.addMarker(mo);
 
@@ -138,7 +137,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                MarkerOptions mo= new MarkerOptions()
                         .position(temp)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                        .title(res.getName()).snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
+                        .title(res.getName())
+                       .snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
                 Marker m =
                         mMap.addMarker(mo);
 
@@ -187,7 +187,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onResponse(Call<PlaceMarker> call, Response<PlaceMarker> response) {
 
                 placeMarkerList=response.body();
-
+Log.d("errorcount",String.valueOf(response.body().getResults().size()));
                 setMarker(placeMarkerList);
             }
 
