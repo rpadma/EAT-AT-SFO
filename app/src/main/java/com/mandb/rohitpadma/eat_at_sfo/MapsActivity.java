@@ -33,6 +33,8 @@ import java.util.List;
 
 import java.util.concurrent.TimeUnit;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -58,7 +60,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     List<PlaceMarker> placeMarkerList=new ArrayList<>();
     List<Result> resultList=new ArrayList<>();
     int count=0;
-
     CompositeDisposable disposable;
 
     PlaceMarker placeMarker1;
@@ -74,6 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        ButterKnife.bind(this);
 
         _placeservice = (IPlaceApi) PlaceService.provideUserRestService();
 
@@ -194,7 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             int height = getResources().getDisplayMetrics().heightPixels;
 //            CameraUpdate cu1 = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 250);
 
-            CameraUpdate cu= CameraUpdateFactory.zoomTo(15);
+            CameraUpdate cu= CameraUpdateFactory.zoomTo(13);
             mMap.animateCamera(cu,500,null);
 
 
@@ -353,5 +355,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         {
             disposable.dispose();
         }
+    }
+
+
+    @OnClick(R.id.frestaurant)
+    public void onRestaurantClick()
+    {
+        Toast.makeText(MapsActivity.this,"On Restaurant Click",Toast.LENGTH_SHORT).show();
+
+    }
+
+    @OnClick(R.id.fbakery)
+    public void onBakeryClick()
+    {
+        Toast.makeText(MapsActivity.this,"On Bakery Click",Toast.LENGTH_SHORT).show();
+    }
+    @OnClick(R.id.fcoffee)
+    public void onCoffeeClick()
+    {
+        Toast.makeText(MapsActivity.this,"On Coffee Click",Toast.LENGTH_SHORT).show();
+    }
+    @OnClick(R.id.fbar)
+    public void onBarClick()
+    {
+        Toast.makeText(MapsActivity.this,"On Bar Click",Toast.LENGTH_SHORT).show();
+    }
+    @OnClick(R.id.fwine)
+    public void onWineClick()
+    {
+
+        Toast.makeText(MapsActivity.this,"On Wine Click",Toast.LENGTH_SHORT).show();
     }
 }

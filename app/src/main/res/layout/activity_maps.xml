@@ -1,8 +1,57 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/map"
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mandb.rohitpadma.eat_at_sfo.MapsActivity" />
+    tools:context="com.mandb.rohitpadma.eat_at_sfo.MapsActivity" >
+
+
+    <com.sa90.materialarcmenu.ArcMenu
+        android:id="@+id/arcMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|bottom"
+        map:menu_scr="@drawable/search"
+        map:menu_open="arc_right">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:src="@drawable/restau"
+            android:layout_height="wrap_content"
+            android:id="@+id/frestaurant"
+            />
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:src="@drawable/bakery"
+            android:layout_height="wrap_content"
+            android:id="@+id/fbakery"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:src="@drawable/coffee"
+            android:layout_height="wrap_content"
+            android:id="@+id/fcoffee"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:src="@drawable/winebottle"
+            android:layout_height="wrap_content"
+            android:id="@+id/fwine"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:src="@drawable/dancing"
+            android:layout_height="wrap_content"
+            android:id="@+id/fbar"
+            />
+
+    </com.sa90.materialarcmenu.ArcMenu>
+</fragment>

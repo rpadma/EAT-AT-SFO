@@ -11,7 +11,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_margin="15dp"
+
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical"
         android:background="#eff4fc"
         app:layout_constraintVertical_bias="0.06"
@@ -64,6 +68,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/RestaurantRating"
                 android:isIndicator="true"
+                android:scaleX="0.75"
+                android:scaleY="0.75"
                 />
 
         </LinearLayout>
@@ -83,6 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:layout_gravity="center"
                 >
 
             <ImageView
@@ -101,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
              android:gravity="center"
+                android:layout_gravity="center"
                 >
 
             <ImageView
@@ -115,6 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:layout_gravity="center"
                 >
             <ImageView
                 android:layout_width="150px"
@@ -137,7 +146,11 @@
        
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical"
         android:background="#eff4fc"
 
@@ -160,8 +173,10 @@
      
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical"
         android:background="#eff4fc"
         >

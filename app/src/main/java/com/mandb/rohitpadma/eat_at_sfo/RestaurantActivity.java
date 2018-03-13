@@ -67,7 +67,7 @@ public class RestaurantActivity extends AppCompatActivity {
     Restaurant restaurant;
     private IPlaceApi _placeservice;
     ArrayList<String> photourls =new ArrayList<>();
-    ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,12 +160,12 @@ public class RestaurantActivity extends AppCompatActivity {
      @OnClick(R.id.RestaurantShare)
      public void onShareClick()
      {
-         
+
          Intent sendIntent = new Intent();
          sendIntent.setAction(Intent.ACTION_SEND);
          sendIntent.putExtra(Intent.EXTRA_TEXT, restaurant.getResult().getUrl());
          sendIntent.setType("text/plain");
-         startActivity(Intent.createChooser(sendIntent,"Share"));
+         startActivity(Intent.createChooser(sendIntent,"Share Location"));
 
 
      }
