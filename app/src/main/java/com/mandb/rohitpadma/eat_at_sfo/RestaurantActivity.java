@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -43,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RestaurantActivity extends AppCompatActivity implements Imagedapter.Callback {
+public class RestaurantActivity extends AppCompatActivity {
 
     @BindView(R.id.RestaurantName)
     TextView rname;
@@ -131,7 +132,7 @@ public class RestaurantActivity extends AppCompatActivity implements Imagedapter
 
 
         photolist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
-        Imagedapter ca = new Imagedapter(photourls,this,this);
+        Imagedapter ca = new Imagedapter(photourls,this);
         photolist.setAdapter(ca);
         ca.notifyDataSetChanged();
 
@@ -143,23 +144,35 @@ public class RestaurantActivity extends AppCompatActivity implements Imagedapter
      public void OnCallClick()
      {
 
-// Code need to be implemented to call from app directly
+   if(restaurant.getResult().getFormatted_phone_number()!=null) {
+   // String num="9802502222";
+    String dial = "tel:" + restaurant.getResult().getFormatted_phone_number();
+    //String dial = "tel:"+num;
+    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(dial)));
+     }
+     else
+     {
+    Toast.makeText(RestaurantActivity.this,"No phone number",Toast.LENGTH_SHORT).show();
+     }
+
+     }
+
+     @OnClick(R.id.RestaurantShare)
+     public void onShareClick()
+     {
+         
+         Intent sendIntent = new Intent();
+         sendIntent.setAction(Intent.ACTION_SEND);
+         sendIntent.putExtra(Intent.EXTRA_TEXT, restaurant.getResult().getUrl());
+         sendIntent.setType("text/plain");
+         startActivity(Intent.createChooser(sendIntent,"Share"));
+
+
      }
 
 
 
 
-
-    @Override
-    public void showPhoto( final int  position) {
-
-
-
-
-
-        // need to implement code to show the photo in zoom mode.
-
-    }
 
 
 

@@ -78,16 +78,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         _placeservice = (IPlaceApi) PlaceService.provideUserRestService();
 
         disposable=new CompositeDisposable();
-        currentlocation=Utility.getcurrentlocation();
-       if(Utility.isNetworkConnected()) {
+       currentlocation=Utility.getcurrentlocation();
+
+       //Log.d("Currentlat",String.valueOf(currentlocation.latitude));
+      // Log.d("Currentlong",String.valueOf(currentlocation.longitude));
+      // currentlocation=new LatLng(35.3164989,-80.74309089999997);
+        if(Utility.isNetworkConnected()) {
 
           // fetchdata(AppConfiguration.pagetoken);
            fetchplacemarker(AppConfiguration.pagetoken);
-
-
-
-
-
 
        }
        else
@@ -206,6 +205,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(true);
 
 
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Toast.makeText(MapsActivity.this, "Infowindow clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -317,7 +322,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(token!=null)
         Log.d("Token",token);
 
-        if(count<3){
+        if(count<1){
             try {
                 TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {

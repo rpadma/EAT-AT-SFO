@@ -107,6 +107,7 @@
                 android:layout_width="150px"
                 android:layout_height="150px"
                 android:src="@drawable/locationmarker"
+                android:id="@+id/RestaurantLocation"
                 />
             </LinearLayout>
             <LinearLayout
@@ -117,7 +118,7 @@
                 >
             <ImageView
                 android:layout_width="150px"
-
+                android:id="@+id/RestaurantShare"
                 android:layout_height="150px"
                 android:src="@drawable/share"
                 />

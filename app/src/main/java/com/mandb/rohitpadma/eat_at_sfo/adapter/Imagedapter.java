@@ -32,10 +32,10 @@ public class Imagedapter extends RecyclerView.Adapter<Imagedapter.ViewHolder>{
     Context context;
     int cu=0;
 
-    public Imagedapter(ArrayList<String> colist,Callback callback,Context context)
+    public Imagedapter(ArrayList<String> colist,Context context)
     {
         this.colist=colist;
-        this.callback=callback;
+
         this.context=context;
 
     }
