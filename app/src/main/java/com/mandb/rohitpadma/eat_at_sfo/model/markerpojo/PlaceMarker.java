@@ -25,6 +25,16 @@ public class PlaceMarker {
     @Expose
     private String status;
 
+    @Override
+    public String toString() {
+        return "PlaceMarker{" +
+                "htmlAttributions=" + htmlAttributions +
+                ", nextPageToken='" + nextPageToken + '\'' +
+                ", results=" + results +
+                ", status='" + status + '\'' +
+                '}';
+    }
+
     /**
      *
      * @return

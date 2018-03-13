@@ -13,6 +13,11 @@ public class AppConfiguration {
     public static String Key="AIzaSyBcLZtBC-2jSDG8iiZpECV_yWpUqaGeDTk";
     public static String radius="5000";
     public static String placetype="restaurant";
+    public static String nextPage="true";
+    public static String nextPageval="true";
+    public static String sensorvalue="false";
+    public static String pagetoken="";
+
 
 
 

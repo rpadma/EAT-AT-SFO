@@ -2,12 +2,11 @@ package com.mandb.rohitpadma.eat_at_sfo;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
+import android.util.Pair;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -26,11 +25,23 @@ import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.IPlaceApi;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.PlaceService;
-import com.mandb.rohitpadma.eat_at_sfo.util.GPSTracker;
 import com.mandb.rohitpadma.eat_at_sfo.util.Utility;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,12 +49,22 @@ import retrofit2.Response;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback  {
 
     private GoogleMap mMap;
-    public PlaceMarker placeMarkerList;
+
     private IPlaceApi _placeservice;
     private UiSettings mUiSettings;
     HashMap<Marker,Result> hmap=new HashMap<>();
     LatLng currentlocation=null;
     LatLngBounds.Builder b = new LatLngBounds.Builder();
+    List<PlaceMarker> placeMarkerList=new ArrayList<>();
+    List<Result> resultList=new ArrayList<>();
+    int count=0;
+
+    CompositeDisposable disposable;
+
+    PlaceMarker placeMarker1;
+    PlaceMarker placeMarker2;
+    PlaceMarker getPlaceMarker3;
+    String token="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +74,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         _placeservice = (IPlaceApi) PlaceService.provideUserRestService();
 
+        disposable=new CompositeDisposable();
         currentlocation=Utility.getcurrentlocation();
        if(Utility.isNetworkConnected()) {
 
-           fetchdata();
+          // fetchdata(AppConfiguration.pagetoken);
+           fetchplacemarker(AppConfiguration.pagetoken);
+
+
+
+
+
+
        }
        else
        {
@@ -90,7 +120,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
        Marker current= mMap.addMarker(new MarkerOptions().position(sydney)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title("your location"));
        current.showInfoWindow();
-       mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
 
         b.include(sydney);
 
@@ -114,9 +147,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public void setMarker(PlaceMarker example)
+    public void setMarker(List<Result> results)
     {
-        for (Result res:example.getResults()) {
+
+
+
+        Log.d("Next token", String.valueOf(results.size()));
+        for (Result res:results) {
 
             LatLng temp=new LatLng(res.getGeometry().getLocation().getLat(),res.getGeometry().getLocation().getLng());
 
@@ -127,7 +164,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                         .title(res.getName())
                         .snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
-                 Marker m =
+                   Marker m =
                         mMap.addMarker(mo);
 
                 hmap.put(m, res);
@@ -146,15 +183,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 hmap.put(m, res);
 
             }
-            b.include(temp);
 
+            //if(count==1) {
+                b.include(temp);
+            //}
         }
 
-        LatLngBounds bounds = b.build();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 250);
-        mMap.animateCamera(cu);
+
+            LatLngBounds bounds = b.build();
+            int width = getResources().getDisplayMetrics().widthPixels;
+            int height = getResources().getDisplayMetrics().heightPixels;
+//            CameraUpdate cu1 = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 250);
+
+            CameraUpdate cu= CameraUpdateFactory.zoomTo(15);
+            mMap.animateCamera(cu,500,null);
 
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -176,19 +218,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public void fetchdata()
+    public void fetchdata(String pagetoken)
     {
 
 
+
+      //  Log.d("Token"+String.valueOf(count),pagetoken);
         Call<PlaceMarker> call=_placeservice.fetchPlaces(String.valueOf(currentlocation.latitude)+","+String.valueOf(currentlocation.longitude),
-                AppConfiguration.radius,AppConfiguration.placetype,AppConfiguration.Key);
+                AppConfiguration.radius,AppConfiguration.placetype,
+              //  AppConfiguration.nextPage,
+
+                //AppConfiguration.sensorvalue,
+                AppConfiguration.Key,
+                pagetoken);
         call.enqueue(new Callback<PlaceMarker>() {
             @Override
             public void onResponse(Call<PlaceMarker> call, Response<PlaceMarker> response) {
 
-                placeMarkerList=response.body();
-Log.d("errorcount",String.valueOf(response.body().getResults().size()));
-                setMarker(placeMarkerList);
+               PlaceMarker placeMarker=response.body();
+                Log.d("Token"+String.valueOf(count),placeMarker.toString());
+
+                resultList.addAll(placeMarker.getResults());
+                count++;
+                getPlaceMarker(placeMarker);
+
             }
 
             @Override
@@ -197,7 +250,103 @@ Log.d("errorcount",String.valueOf(response.body().getResults().size()));
             }
         });
 
+
+
+
     }
 
 
+    public void fetchplacemarker(final String pagetoken)
+    {
+
+                Observable<PlaceMarker> placeMarkerObservable =  _placeservice.fetchPlacesrx(String.valueOf(currentlocation.latitude)+","+String.valueOf(currentlocation.longitude),
+            AppConfiguration.radius,AppConfiguration.placetype,
+            //  AppConfiguration.nextPage,
+
+            //AppConfiguration.sensorvalue,
+            AppConfiguration.Key,
+            pagetoken)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+
+
+        placeMarkerObservable.subscribeWith(new Observer<PlaceMarker>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(PlaceMarker placeMarker) {
+
+                count++;
+                token=placeMarker.getNextPageToken();
+                placeMarkerList.add(placeMarker);
+
+                getPlaceMarker(placeMarker);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+    }
+
+
+
+
+    public void getPlaceMarker(PlaceMarker placeMarker)
+    {
+
+        for(Result res:placeMarker.getResults())
+        {
+            Log.d("Res name",res.getName());
+        }
+        resultList.addAll(placeMarker.getResults());
+
+            setMarker(placeMarker.getResults());
+
+
+        if(token!=null)
+        Log.d("Token",token);
+
+        if(count<3){
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            fetchplacemarker(token);
+
+        }
+
+
+
+
+       // fetchdata1(placeMarker.getNextPageToken());
+
+         //  fetchdata1(place.getNextPageToken());
+
+    }
+
+    /**
+     * Destroy all fragments and loaders.
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(disposable!=null)
+        {
+            disposable.dispose();
+        }
+    }
 }

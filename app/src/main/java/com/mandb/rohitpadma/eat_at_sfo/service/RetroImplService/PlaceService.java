@@ -1,5 +1,6 @@
 package com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
 
 import java.util.concurrent.TimeUnit;
@@ -56,7 +57,7 @@ public class PlaceService {
                     .client(getOkHttpClient())
                     .baseUrl(BASE_API_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    //  .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                      .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
         return mRetrofitInstance;
