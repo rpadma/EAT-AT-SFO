@@ -79,7 +79,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         if (s.length() > 0) {
 
             // holder.imagecview.setBackground(null);
-            Picasso.with(holder.imgview.getContext()).load(s).fit().into(holder.imgview);
+            Picasso.with(holder.imgview.getContext()).load(s).fit().placeholder(R.drawable.imageloading).into(holder.imgview);
         }
 
 
@@ -140,15 +140,15 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         if(cu+val>=0 && val==-1)
         {
             cu=cu+val;
-            Picasso.with(context).load(colist.get(cu)).fit().placeholder(R.drawable.avatar).into(iv);
+            Picasso.with(context).load(colist.get(cu)).placeholder(R.drawable.imageloading).fit().into(iv);
         }
         else if(cu+val<colist.size() && val==1){
             cu=cu+val;
-            Picasso.with(context).load(colist.get(cu)).fit().placeholder(R.drawable.avatar).into(iv);
+            Picasso.with(context).load(colist.get(cu)).placeholder(R.drawable.imageloading).fit().into(iv);
         }
         else
         {
-            Picasso.with(context).load(colist.get(cu)).fit().placeholder(R.drawable.avatar).into(iv);
+            Picasso.with(context).load(colist.get(cu)).placeholder(R.drawable.imageloading).fit().into(iv);
         }
     }
 

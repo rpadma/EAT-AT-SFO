@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.mandb.rohitpadma.eat_at_sfo.adapter.Imagedapter;
 import com.mandb.rohitpadma.eat_at_sfo.adapter.ReviewAdapter;
+import com.mandb.rohitpadma.eat_at_sfo.adapter.TimeAdapter;
 import com.mandb.rohitpadma.eat_at_sfo.basemodel.RestaurantPresenterImpl;
 import com.mandb.rohitpadma.eat_at_sfo.baseview.RestaurantView;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
@@ -60,7 +61,11 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
     RecyclerView photolist;
     @BindView(R.id.RestaurantAddress)
     TextView raddress;
+    @BindView(R.id.RestaurantTimings)
+    ListView timinglist;
+
     ReviewAdapter ra;
+    TimeAdapter ta;
 
     AlertDialog dialog;
 
@@ -81,7 +86,6 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         }
 
         restaurantPresenter=new RestaurantPresenterImpl(this);
-
         restaurantPresenter.fetchRestaurantdata(result.getPlaceId());
 
 
@@ -103,6 +107,11 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         rrating.setRating(Float.valueOf(restaurant.getResult().getRating()));
         raddress.setText(restaurant.getResult().getFormatted_address());
 
+
+        ta=new TimeAdapter(this,R.layout.childtimingview,restaurant.getResult().getOpening_hours().getWeekday_text());
+        ta.setNotifyOnChange(true);
+        timinglist.setAdapter(ta);
+
         ra = new ReviewAdapter(this, R.layout.childreviewlayout,restaurant.getResult().getReviews());
         ra.setNotifyOnChange(true);
         reviewlist.setAdapter(ra);
@@ -120,6 +129,8 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
 
 
     }
+
+
 
 
     @OnClick(R.id.RestaurantContact)

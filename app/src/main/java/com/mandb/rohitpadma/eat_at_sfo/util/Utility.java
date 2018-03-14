@@ -8,6 +8,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mandb.rohitpadma.eat_at_sfo.App;
 import com.mandb.rohitpadma.eat_at_sfo.MapsActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by rohitpadma on 3/5/18.
  */
@@ -45,4 +48,14 @@ public class Utility {
 
         return currentlocation;
     }
+
+    public static String getdayname()
+    {
+        Date now = new Date();
+        SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE");
+
+        return simpleDateformat.format(now).toLowerCase();
+
+    }
+
 }

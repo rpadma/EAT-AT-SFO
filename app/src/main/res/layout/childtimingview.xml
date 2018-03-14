@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="1dp"
+    android:layout_margin="20dp"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/otiming"
+        android:text="Sunday: Closed"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:padding="3dp"
+android:layout_marginLeft="5dp"
+        />
+</LinearLayout>
