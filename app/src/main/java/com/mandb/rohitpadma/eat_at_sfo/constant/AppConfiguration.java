@@ -17,6 +17,11 @@ public class AppConfiguration {
     public static String nextPageval="true";
     public static String sensorvalue="false";
     public static String pagetoken="";
+    public static String cplacetype="cafe";
+    public static String bplacetype="bakery";
+    public static String clubplacetype="bar|night_club";
+    public static String wplacetype="liquor_store";
+
 
 
 

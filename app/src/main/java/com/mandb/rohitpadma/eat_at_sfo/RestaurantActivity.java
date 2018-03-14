@@ -118,6 +118,7 @@ public class RestaurantActivity extends AppCompatActivity {
             }
         }
         rname.setText(restaurant.getResult().getName());
+        if(restaurant.getResult().getRating()!=null)
         rrating.setRating(Float.valueOf(restaurant.getResult().getRating()));
         raddress.setText(restaurant.getResult().getFormatted_address());
 
