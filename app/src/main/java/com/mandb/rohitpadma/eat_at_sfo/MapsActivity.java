@@ -71,7 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -82,15 +82,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         disposable=new CompositeDisposable();
        currentlocation=Utility.getcurrentlocation();
 
-       //Log.d("Currentlat",String.valueOf(currentlocation.latitude));
-      // Log.d("Currentlong",String.valueOf(currentlocation.longitude));
-      // currentlocation=new LatLng(35.3164989,-80.74309089999997);
         if(Utility.isNetworkConnected()) {
 
-
-          // fetchdata(AppConfiguration.pagetoken);
            fetchplacemarker(AppConfiguration.pagetoken,AppConfiguration.placetype);
-
        }
        else
        {
@@ -118,7 +112,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         setCurrentLocation();
 
+        CameraUpdate cu= CameraUpdateFactory.zoomTo(13);
+        mMap.animateCamera(cu,500,null);
 
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Toast.makeText(MapsActivity.this, "Infowindow clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                Result r=hmap.get(marker);
+                showRestaurant(r);
+                return false;
+            }
+        });
     }
 
 
@@ -131,11 +150,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         current.showInfoWindow();
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-
-
-        // b.include(sydney);
-
         mUiSettings = mMap.getUiSettings();
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
@@ -157,9 +171,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void setMarker(List<Result> results)
     {
 
-
-
-        Log.d("Next token", String.valueOf(results.size()));
         for (Result res:results) {
 
             LatLng temp=new LatLng(res.getGeometry().getLocation().getLat(),res.getGeometry().getLocation().getLng());
@@ -192,81 +203,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             //if(count==1) {
-                b.include(temp);
+         //       b.include(temp);
             //}
         }
 
 
-            LatLngBounds bounds = b.build();
-            int width = getResources().getDisplayMetrics().widthPixels;
-            int height = getResources().getDisplayMetrics().heightPixels;
-           CameraUpdate cu1 = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 250);
-
-           CameraUpdate cu= CameraUpdateFactory.zoomTo(13);
-            mMap.animateCamera(cu,500,null);
-
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
-        }
-        mMap.setMyLocationEnabled(true);
-
-
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                Toast.makeText(MapsActivity.this, "Infowindow clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-
-                Result r=hmap.get(marker);
-                showRestaurant(r);
-                return false;
-            }
-        });
-    }
-
-
-    public void fetchdata(String pagetoken)
-    {
-
-
-
-      //  Log.d("Token"+String.valueOf(count),pagetoken);
-        Call<PlaceMarker> call=_placeservice.fetchPlaces(String.valueOf(currentlocation.latitude)+","+String.valueOf(currentlocation.longitude),
-                AppConfiguration.radius,AppConfiguration.placetype,
-              //  AppConfiguration.nextPage,
-
-                //AppConfiguration.sensorvalue,
-                AppConfiguration.Key,
-                pagetoken);
-        call.enqueue(new Callback<PlaceMarker>() {
-            @Override
-            public void onResponse(Call<PlaceMarker> call, Response<PlaceMarker> response) {
-
-               PlaceMarker placeMarker=response.body();
-                Log.d("Token"+String.valueOf(count),placeMarker.toString());
-
-                resultList.addAll(placeMarker.getResults());
-                count++;
-                //getPlaceMarker(placeMarker);
-
-            }
-
-            @Override
-            public void onFailure(Call<PlaceMarker> call, Throwable t) {
-
-            }
-        });
-
-
+           // LatLngBounds bounds = b.build();
+           // int width = getResources().getDisplayMetrics().widthPixels;
+           // int height = getResources().getDisplayMetrics().heightPixels;
+           //CameraUpdate cu1 = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 250);
 
 
     }
+
 
 
     public void fetchplacemarker(final String pagetoken,final String ptype)
@@ -274,9 +223,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 Observable<PlaceMarker> placeMarkerObservable =  _placeservice.fetchPlacesrx(String.valueOf(currentlocation.latitude)+","+String.valueOf(currentlocation.longitude),
             AppConfiguration.radius,ptype,
-            //  AppConfiguration.nextPage,
-
-            //AppConfiguration.sensorvalue,
             AppConfiguration.Key,
             pagetoken)
                 .subscribeOn(Schedulers.newThread())
@@ -292,12 +238,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onNext(PlaceMarker placeMarker) {
 
-
                 count++;
                 token=placeMarker.getNextPageToken();
                 placeMarkerList.add(placeMarker);
-
-                 getPlaceMarker(placeMarker,ptype);
+                getPlaceMarker(placeMarker,ptype);
             }
 
             @Override
@@ -318,20 +262,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void getPlaceMarker(PlaceMarker placeMarker,String ptype)
     {
-
-        for(Result res:placeMarker.getResults())
-        {
-            Log.d("Res name",res.getName());
-        }
-        resultList.addAll(placeMarker.getResults());
-
-            setMarker(placeMarker.getResults());
-
-
-        if(token!=null)
-        Log.d("Token",token);
-
-        if(count<1){
+        setMarker(placeMarker.getResults());
+         if(count<1){
             try {
                 TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {
@@ -341,15 +273,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             fetchplacemarker(token,ptype);
 
         }
+   }
 
-
-
-
-       // fetchdata1(placeMarker.getNextPageToken());
-
-         //  fetchdata1(place.getNextPageToken());
-
-    }
 
     /**
      * Destroy all fragments and loaders.

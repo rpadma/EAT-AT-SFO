@@ -81,6 +81,7 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         }
 
         restaurantPresenter=new RestaurantPresenterImpl(this);
+
         restaurantPresenter.fetchRestaurantdata(result.getPlaceId());
 
 

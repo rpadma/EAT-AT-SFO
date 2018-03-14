@@ -6,6 +6,7 @@ import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
 import com.mandb.rohitpadma.eat_at_sfo.model.restaurantpojo.Restaurant;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.IPlaceApi;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.PlaceService;
+import com.mandb.rohitpadma.eat_at_sfo.util.Utility;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,22 +33,28 @@ public class RestaurantPresenterImpl implements RestaurantPresenter {
     @Override
     public void fetchRestaurantdata(String placeid) {
 
-        Call<Restaurant> call=_placeservice.fetchRestaurantDetails(placeid, AppConfiguration.Key);
-        call.enqueue(new Callback<Restaurant>() {
-            @Override
-            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
+        if(Utility.isNetworkConnected()) {
+            Call<Restaurant> call = _placeservice.fetchRestaurantDetails(placeid, AppConfiguration.Key);
+            call.enqueue(new Callback<Restaurant>() {
+                @Override
+                public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
 
-                restaurant=response.body();
-                restaurantView.setView(restaurant);
+                    restaurant = response.body();
+                    restaurantView.setView(restaurant);
 
-            }
+                }
 
-            @Override
-            public void onFailure(Call<Restaurant> call, Throwable t) {
+                @Override
+                public void onFailure(Call<Restaurant> call, Throwable t) {
 
-                restaurantView.showToastMessage("Error occured during fetching Restaurant data");
-            }
-        });
+                    restaurantView.showToastMessage("Error occured during fetching Restaurant data");
+                }
+            });
+        }
+        else
+        {
+            restaurantView.showToastMessage("No Wifi or Network found");
+        }
     }
 
     @Override
