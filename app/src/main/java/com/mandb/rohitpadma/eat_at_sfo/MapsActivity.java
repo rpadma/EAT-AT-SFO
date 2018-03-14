@@ -331,7 +331,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(token!=null)
         Log.d("Token",token);
 
-        if(count<2){
+        if(count<1){
             try {
                 TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {

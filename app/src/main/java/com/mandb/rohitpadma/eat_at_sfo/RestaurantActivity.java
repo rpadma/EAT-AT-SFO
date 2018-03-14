@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.mandb.rohitpadma.eat_at_sfo.adapter.Imagedapter;
 import com.mandb.rohitpadma.eat_at_sfo.adapter.ReviewAdapter;
+import com.mandb.rohitpadma.eat_at_sfo.basemodel.RestaurantPresenterImpl;
+import com.mandb.rohitpadma.eat_at_sfo.baseview.RestaurantView;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
@@ -44,7 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RestaurantActivity extends AppCompatActivity {
+public class RestaurantActivity extends AppCompatActivity implements RestaurantView {
 
     @BindView(R.id.RestaurantName)
     TextView rname;
@@ -64,51 +66,29 @@ public class RestaurantActivity extends AppCompatActivity {
 
 
     Result result;
-    Restaurant restaurant;
-    private IPlaceApi _placeservice;
     ArrayList<String> photourls =new ArrayList<>();
+    RestaurantPresenterImpl restaurantPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
         getSupportActionBar().hide();
-
         ButterKnife.bind(this);
         if(getIntent().getExtras()!=null)
         {
             result=(Result) getIntent().getExtras().getParcelable("marker");
         }
 
-        _placeservice = (IPlaceApi) PlaceService.provideUserRestService();
-
-
-
-        fetchRestaurantdata(result.getPlaceId());
+        restaurantPresenter=new RestaurantPresenterImpl(this);
+        restaurantPresenter.fetchRestaurantdata(result.getPlaceId());
 
 
     }
 
-    public void fetchRestaurantdata(String placeid)
-    {
-        Call<Restaurant> call=_placeservice.fetchRestaurantDetails(placeid,AppConfiguration.Key);
-        call.enqueue(new Callback<Restaurant>() {
-            @Override
-            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
 
-                restaurant=response.body();
-                setview(restaurant);
-
-            }
-
-            @Override
-            public void onFailure(Call<Restaurant> call, Throwable t) {
-
-            }
-        });
-    }
-
-    public void setview(Restaurant restaurant)
+    @Override
+    public void setView(Restaurant restaurant)
     {
 
 
@@ -142,41 +122,45 @@ public class RestaurantActivity extends AppCompatActivity {
 
 
     @OnClick(R.id.RestaurantContact)
-     public void OnCallClick()
+     public void onCallClick()
      {
 
-   if(restaurant.getResult().getFormatted_phone_number()!=null) {
-   // String num="9802502222";
-    String dial = "tel:" + restaurant.getResult().getFormatted_phone_number();
-    //String dial = "tel:"+num;
-    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(dial)));
-     }
-     else
-     {
-    Toast.makeText(RestaurantActivity.this,"No phone number",Toast.LENGTH_SHORT).show();
+         restaurantPresenter.onCallClick();
      }
 
-     }
 
      @OnClick(R.id.RestaurantShare)
      public void onShareClick()
      {
-
-         Intent sendIntent = new Intent();
-         sendIntent.setAction(Intent.ACTION_SEND);
-         sendIntent.putExtra(Intent.EXTRA_TEXT, restaurant.getResult().getUrl());
-         sendIntent.setType("text/plain");
-         startActivity(Intent.createChooser(sendIntent,"Share Location"));
-
-
+         restaurantPresenter.onShareClick();
      }
 
 
+    @Override
+    public void callRestaurant(String phoneNumber) {
 
 
+            String dial = "tel:" + phoneNumber; //restaurant.getResult().getFormatted_phone_number();
+            startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(dial)));
 
 
+    }
 
+    @Override
+    public void shareRestaurant(String url) {
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent,"Share Location"));
+    }
+
+    @Override
+    public void showToastMessage(String message) {
+
+        Toast.makeText(RestaurantActivity.this,message,Toast.LENGTH_SHORT).show();
+    }
 
 
 
