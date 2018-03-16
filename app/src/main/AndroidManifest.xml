@@ -2,11 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mandb.rohitpadma.eat_at_sfo">
 
-    <permission android:name="com.mandb.rohitpadma.eat_at_sfo.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature"/>
+    <permission
+        android:name="com.mandb.rohitpadma.eat_at_sfo.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -41,9 +42,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".RestaurantActivity"
-
-            ></activity>
+        <activity android:name=".RestaurantActivity" />
     </application>
 
 </manifest>

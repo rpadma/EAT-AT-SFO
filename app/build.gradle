@@ -45,6 +45,6 @@ dependencies {
     compile 'com.sa90.materialarcmenu:library:1.5.0'
     compile 'com.android.support:design:26.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    
+
 
 }

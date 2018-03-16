@@ -20,6 +20,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mandb.rohitpadma.eat_at_sfo.basemodel.MapPresenterImpl;
+import com.mandb.rohitpadma.eat_at_sfo.basepresenter.MapPresenter;
+import com.mandb.rohitpadma.eat_at_sfo.baseview.MapView;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
@@ -48,49 +52,23 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback  {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,MapView {
 
     private GoogleMap mMap;
-
-    private IPlaceApi _placeservice;
     private UiSettings mUiSettings;
     HashMap<Marker,Result> hmap=new HashMap<>();
-    LatLng currentlocation=null;
-    LatLngBounds.Builder b = new LatLngBounds.Builder();
-    List<PlaceMarker> placeMarkerList=new ArrayList<>();
-    List<Result> resultList=new ArrayList<>();
-    int count=0;
-    CompositeDisposable disposable;
-
-    PlaceMarker placeMarker1;
-    PlaceMarker placeMarker2;
-    PlaceMarker getPlaceMarker3;
-    String token="";
+    MapPresenterImpl mapPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ButterKnife.bind(this);
 
-        _placeservice = (IPlaceApi) PlaceService.provideUserRestService();
 
-        disposable=new CompositeDisposable();
-       currentlocation=Utility.getcurrentlocation();
-
-        if(Utility.isNetworkConnected()) {
-
-           fetchplacemarker(AppConfiguration.pagetoken,AppConfiguration.placetype);
-       }
-       else
-       {
-           Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show();
-
-       }
     }
 
 
@@ -108,13 +86,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-
         mMap = googleMap;
-        setCurrentLocation();
+        mapPresenter=new MapPresenterImpl(MapsActivity.this);
+        mapPresenter.getCurrentLocation();
 
         CameraUpdate cu= CameraUpdateFactory.zoomTo(13);
         mMap.animateCamera(cu,500,null);
-
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -122,34 +99,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mMap.setMyLocationEnabled(true);
 
-
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Toast.makeText(MapsActivity.this, "Infowindow clicked", Toast.LENGTH_SHORT).show();
+                Result r=hmap.get(marker);
+                showRestaurant(r);
+                //Toast.makeText(MapsActivity.this, "Infowindow clicked", Toast.LENGTH_SHORT).show();
             }
         });
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                Result r=hmap.get(marker);
-                showRestaurant(r);
                 return false;
             }
         });
+
+        if(Utility.isNetworkConnected()) {
+
+           mapPresenter.fetchRestaurantLocations(AppConfiguration.pagetoken,AppConfiguration.placetype);
+        }
+        else
+        {
+            Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show();
+
+        }
+
+
     }
 
-
-    public void setCurrentLocation()
+     @Override
+    public void setCurrentLocation(LatLng currentLocation)
     {
-        LatLng sydney = currentlocation; //new LatLng(AppConfiguration.lat, AppConfiguration.lng);
 
-        Marker current= mMap.addMarker(new MarkerOptions().position(sydney)
+        Marker current= mMap.addMarker(new MarkerOptions().position(currentLocation)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title("your location"));
         current.showInfoWindow();
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mUiSettings = mMap.getUiSettings();
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
@@ -167,9 +153,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
+     @Override
     public void setMarker(List<Result> results)
     {
+
 
         for (Result res:results) {
 
@@ -202,78 +189,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
 
-            //if(count==1) {
-         //       b.include(temp);
-            //}
+
         }
-
-
-           // LatLngBounds bounds = b.build();
-           // int width = getResources().getDisplayMetrics().widthPixels;
-           // int height = getResources().getDisplayMetrics().heightPixels;
-           //CameraUpdate cu1 = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 250);
 
 
     }
 
-
-
-    public void fetchplacemarker(final String pagetoken,final String ptype)
-    {
-
-                Observable<PlaceMarker> placeMarkerObservable =  _placeservice.fetchPlacesrx(String.valueOf(currentlocation.latitude)+","+String.valueOf(currentlocation.longitude),
-            AppConfiguration.radius,ptype,
-            AppConfiguration.Key,
-            pagetoken)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread());
-
-
-        placeMarkerObservable.subscribeWith(new Observer<PlaceMarker>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(PlaceMarker placeMarker) {
-
-                count++;
-                token=placeMarker.getNextPageToken();
-                placeMarkerList.add(placeMarker);
-                getPlaceMarker(placeMarker,ptype);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-
+    @Override
+    public void clearMap() {
+        mMap.clear();
     }
 
-
-
-
-    public void getPlaceMarker(PlaceMarker placeMarker,String ptype)
-    {
-        setMarker(placeMarker.getResults());
-         if(count<1){
-            try {
-                TimeUnit.SECONDS.sleep(2);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            fetchplacemarker(token,ptype);
-
-        }
-   }
 
 
     /**
@@ -283,57 +209,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onDestroy() {
         super.onDestroy();
 
-        if(disposable!=null)
-        {
-            disposable.dispose();
-        }
     }
 
 
+    
     @OnClick(R.id.frestaurant)
     public void onRestaurantClick()
     {
-        mMap.clear();
-        fetchplacemarker(AppConfiguration.pagetoken,AppConfiguration.placetype);
-        Toast.makeText(MapsActivity.this,"On Restaurant Click",Toast.LENGTH_SHORT).show();
-
+        mapPresenter.fetchPlaceByType(AppConfiguration.placetype);
     }
+
 
     @OnClick(R.id.fbakery)
     public void onBakeryClick()
     {
-        mMap.clear();
-        count=0;
-        setCurrentLocation();
-        fetchplacemarker(AppConfiguration.pagetoken,AppConfiguration.bplacetype);
-        Toast.makeText(MapsActivity.this,"On Bakery Click",Toast.LENGTH_SHORT).show();
+        mapPresenter.fetchPlaceByType(AppConfiguration.bplacetype);
     }
     @OnClick(R.id.fcoffee)
     public void onCoffeeClick()
     {
-        mMap.clear();
-        count=0;
-        setCurrentLocation();
-        fetchplacemarker(AppConfiguration.pagetoken,AppConfiguration.cplacetype);
-        Toast.makeText(MapsActivity.this,"On Coffee Click",Toast.LENGTH_SHORT).show();
+        mapPresenter.fetchPlaceByType(AppConfiguration.cplacetype);
     }
     @OnClick(R.id.fbar)
     public void onBarClick()
     {
-        mMap.clear();
-        count=0;
-        setCurrentLocation();
-        fetchplacemarker(AppConfiguration.pagetoken,AppConfiguration.clubplacetype);
-        Toast.makeText(MapsActivity.this,"On Bar Click",Toast.LENGTH_SHORT).show();
+        mapPresenter.fetchPlaceByType(AppConfiguration.clubplacetype);
     }
     @OnClick(R.id.fwine)
     public void onWineClick()
     {
-
-        mMap.clear();
-        count=0;
-        setCurrentLocation();
-        fetchplacemarker(AppConfiguration.pagetoken,AppConfiguration.wplacetype);
-        Toast.makeText(MapsActivity.this,"On Wine Click",Toast.LENGTH_SHORT).show();
+        mapPresenter.fetchPlaceByType(AppConfiguration.wplacetype);
     }
 }
