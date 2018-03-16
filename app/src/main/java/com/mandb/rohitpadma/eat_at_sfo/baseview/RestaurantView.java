@@ -17,7 +17,8 @@ public interface RestaurantView {
 
     public void showToastMessage(String message);
 
+    public void showTiming(String[] opentimings);
 
-
+    public void closeAlert();
 
 }

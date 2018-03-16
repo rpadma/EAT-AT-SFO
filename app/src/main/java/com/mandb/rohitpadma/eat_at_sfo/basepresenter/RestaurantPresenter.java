@@ -10,4 +10,6 @@ public interface RestaurantPresenter {
     public void fetchRestaurantdata(String placeid);
     public void onCallClick();
     public void onShareClick();
+    public void onCheckTiming();
+    public void closeAlert();
 }

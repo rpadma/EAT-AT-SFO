@@ -70,8 +70,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/RestaurantRating"
                 android:isIndicator="true"
-                android:scaleX="0.75"
-                android:scaleY="0.75"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
                 />
 
         </LinearLayout>
@@ -81,7 +81,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight=".6"
+            android:layout_weight=".5"
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:weightSum="3"
@@ -95,8 +95,8 @@
                 >
 
             <ImageView
-                android:layout_width="130px"
-                android:layout_height="130px"
+                android:layout_width="100px"
+                android:layout_height="100px"
                 android:src="@drawable/call"
                 android:layout_gravity="center"
                 android:id="@+id/RestaurantContact"
@@ -113,10 +113,10 @@
                 >
 
             <ImageView
-                android:layout_width="130px"
-                android:layout_height="130px"
+                android:layout_width="100px"
+                android:layout_height="100px"
                 android:src="@drawable/watch"
-                android:id="@+id/RestaurantLocation"
+                android:id="@+id/RestaurantTiming"
                 />
             </LinearLayout>
             <LinearLayout
@@ -127,9 +127,9 @@
                 android:layout_gravity="center"
                 >
             <ImageView
-                android:layout_width="130px"
+                android:layout_width="100px"
                 android:id="@+id/RestaurantShare"
-                android:layout_height="130px"
+                android:layout_height="100px"
                 android:src="@drawable/share"
                 />
             </LinearLayout>
@@ -140,24 +140,7 @@
     </LinearLayout>
 
 
-    <LinearLayout
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:orientation="vertical"
-        android:background="#eff4fc"
-        android:id="@+id/timelayout"
-        >
-   <ListView
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:id="@+id/RestaurantTimings"
-       ></ListView>
-    </LinearLayout>
 
     <LinearLayout
        

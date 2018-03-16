@@ -17,6 +17,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -61,9 +63,8 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
     RecyclerView photolist;
     @BindView(R.id.RestaurantAddress)
     TextView raddress;
-    @BindView(R.id.RestaurantTimings)
     ListView timinglist;
-
+    ImageButton btnclose;
     ReviewAdapter ra;
     TimeAdapter ta;
 
@@ -108,9 +109,7 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         raddress.setText(restaurant.getResult().getFormatted_address());
 
 
-        ta=new TimeAdapter(this,R.layout.childtimingview,restaurant.getResult().getOpening_hours().getWeekday_text());
-        ta.setNotifyOnChange(true);
-        timinglist.setAdapter(ta);
+
 
         ra = new ReviewAdapter(this, R.layout.childreviewlayout,restaurant.getResult().getReviews());
         ra.setNotifyOnChange(true);
@@ -136,7 +135,6 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
     @OnClick(R.id.RestaurantContact)
      public void onCallClick()
      {
-
          restaurantPresenter.onCallClick();
      }
 
@@ -145,6 +143,12 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
      public void onShareClick()
      {
          restaurantPresenter.onShareClick();
+     }
+
+     @OnClick(R.id.RestaurantTiming)
+     public void onCheckTiming()
+     {
+         restaurantPresenter.onCheckTiming();
      }
 
 
@@ -157,6 +161,10 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
 
 
     }
+
+
+
+
 
     @Override
     public void shareRestaurant(String url) {
@@ -174,6 +182,52 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         Toast.makeText(RestaurantActivity.this,message,Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void showTiming(String[] opentimings) {
 
 
+        AlertDialog.Builder builder=new AlertDialog.Builder(RestaurantActivity.this);
+        builder.setView(R.layout.timinglayout);
+
+        dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        timinglist=(ListView)dialog.findViewById(R.id.RestaurantTimings);
+        btnclose=(ImageButton)dialog.findViewById(R.id.alertcancel);
+
+
+        ta=new TimeAdapter(this,R.layout.childtimingview,opentimings);
+        ta.setNotifyOnChange(true);
+        timinglist.setAdapter(ta);
+
+        btnclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                restaurantPresenter.closeAlert();
+            }
+        });
+
+    }
+
+    @Override
+    public void closeAlert() {
+
+        if(dialog!=null)
+        {
+            dialog.hide();
+
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(dialog!=null)
+        {
+            dialog.hide();
+
+        }
+
+    }
 }

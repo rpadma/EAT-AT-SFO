@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+    <RelativeLayout
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        android:background="#eff4fc"
+        android:id="@+id/timelayout"
+
+        >
+
+        <ListView
+            android:layout_marginTop="50px"
+            android:id="@+id/RestaurantTimings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/alertcancel"
+        android:layout_width="50px"
+        android:layout_height="50px"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:padding="20dp"
+        app:srcCompat="@drawable/delete" />
+
+
+</RelativeLayout>

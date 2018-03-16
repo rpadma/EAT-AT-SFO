@@ -83,5 +83,24 @@ public class RestaurantPresenterImpl implements RestaurantPresenter {
 
     }
 
+    @Override
+    public void onCheckTiming() {
+
+        if(restaurant.getResult().getOpening_hours().getWeekday_text()!=null)
+        {
+            restaurantView.showTiming(restaurant.getResult().getOpening_hours().getWeekday_text());
+        }
+        else
+        {
+            restaurantView.showToastMessage("No open hours found");
+        }
+    }
+
+    @Override
+    public void closeAlert() {
+
+        restaurantView.closeAlert();
+    }
+
 
 }

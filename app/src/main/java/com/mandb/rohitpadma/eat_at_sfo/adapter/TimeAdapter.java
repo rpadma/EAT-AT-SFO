@@ -63,16 +63,7 @@ public class TimeAdapter extends ArrayAdapter<String> {
             }
         }
 
-
-
-
-
-
-
-
         TextView timingtext=(TextView)convertView.findViewById(R.id.otiming);
-
-
         timingtext.setText(g);
 
         notifyDataSetChanged();
