@@ -5,10 +5,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Pair;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,40 +14,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mandb.rohitpadma.eat_at_sfo.basemodel.MapPresenterImpl;
-import com.mandb.rohitpadma.eat_at_sfo.basepresenter.MapPresenter;
 import com.mandb.rohitpadma.eat_at_sfo.baseview.MapView;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
-import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
-import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.IPlaceApi;
-import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.PlaceService;
 import com.mandb.rohitpadma.eat_at_sfo.util.Utility;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,MapView {
 
@@ -200,8 +175,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
     }
 
-
-
     /**
      * Destroy all fragments and loaders.
      */
@@ -212,7 +185,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    
+
     @OnClick(R.id.frestaurant)
     public void onRestaurantClick()
     {

@@ -1,53 +1,33 @@
 package com.mandb.rohitpadma.eat_at_sfo;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Parcelable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mandb.rohitpadma.eat_at_sfo.adapter.Imagedapter;
 import com.mandb.rohitpadma.eat_at_sfo.adapter.ReviewAdapter;
 import com.mandb.rohitpadma.eat_at_sfo.adapter.TimeAdapter;
 import com.mandb.rohitpadma.eat_at_sfo.basemodel.RestaurantPresenterImpl;
 import com.mandb.rohitpadma.eat_at_sfo.baseview.RestaurantView;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
-import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
 import com.mandb.rohitpadma.eat_at_sfo.model.restaurantpojo.Photos;
 import com.mandb.rohitpadma.eat_at_sfo.model.restaurantpojo.Restaurant;
-import com.mandb.rohitpadma.eat_at_sfo.model.restaurantpojo.Reviews;
-import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.IPlaceApi;
-import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.PlaceService;
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 public class RestaurantActivity extends AppCompatActivity implements RestaurantView {
 
@@ -89,14 +69,12 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         restaurantPresenter=new RestaurantPresenterImpl(this);
         restaurantPresenter.fetchRestaurantdata(result.getPlaceId());
 
-
     }
 
 
     @Override
     public void setView(Restaurant restaurant)
     {
-
 
         if(restaurant.getResult().getPhotos()!=null) {
             for (Photos p : restaurant.getResult().getPhotos()) {
@@ -107,9 +85,6 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         if(restaurant.getResult().getRating()!=null)
         rrating.setRating(Float.valueOf(restaurant.getResult().getRating()));
         raddress.setText(restaurant.getResult().getFormatted_address());
-
-
-
 
         ra = new ReviewAdapter(this, R.layout.childreviewlayout,restaurant.getResult().getReviews());
         ra.setNotifyOnChange(true);
@@ -126,9 +101,7 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         photolist.setAdapter(ca);
         ca.notifyDataSetChanged();
 
-
     }
-
 
 
 
@@ -155,14 +128,10 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
     @Override
     public void callRestaurant(String phoneNumber) {
 
-
             String dial = "tel:" + phoneNumber; //restaurant.getResult().getFormatted_phone_number();
             startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(dial)));
 
-
     }
-
-
 
 
 
@@ -228,6 +197,5 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
             dialog.hide();
 
         }
-
     }
 }
