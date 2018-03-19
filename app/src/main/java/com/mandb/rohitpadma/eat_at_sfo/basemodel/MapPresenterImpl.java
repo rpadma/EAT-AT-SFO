@@ -6,6 +6,7 @@ import com.mandb.rohitpadma.eat_at_sfo.baseview.MapView;
 import com.mandb.rohitpadma.eat_at_sfo.baseview.RestaurantView;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarker;
+import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
 import com.mandb.rohitpadma.eat_at_sfo.model.restaurantpojo.Restaurant;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.IPlaceApi;
 import com.mandb.rohitpadma.eat_at_sfo.service.RetroImplService.PlaceService;
@@ -36,11 +37,13 @@ public class MapPresenterImpl implements MapPresenter{
     int count=0;
     List<PlaceMarker> placeMarkerList=new ArrayList<>();
 
+
     public MapPresenterImpl(MapView mapView)
     {
         this.mapView=mapView;
         this._placeservice = (IPlaceApi) PlaceService.provideUserRestService();
         currentLocation= Utility.getcurrentlocation();
+       // currentLocation=new LatLng(AppConfiguration.lat,AppConfiguration.lng);
     }
 
     @Override
@@ -51,6 +54,8 @@ public class MapPresenterImpl implements MapPresenter{
 
     @Override
     public void fetchRestaurantLocations(String pageToken,final String placeType) {
+
+
 
         Observable<PlaceMarker> placeMarkerObservable =  _placeservice.fetchPlacesrx(String.valueOf(currentLocation.latitude)+","+String.valueOf(currentLocation.longitude),
                 AppConfiguration.radius,placeType,
@@ -90,27 +95,44 @@ public class MapPresenterImpl implements MapPresenter{
 
     public void fetchPlaceByType(String placeType) {
 
+
+        mapView.startProgress();
         mapView.clearMap();
         count = 0;
         mapView.setCurrentLocation(currentLocation);
         fetchRestaurantLocations(AppConfiguration.pagetoken,placeType);
+
     }
 
 
 
     public void getPlaceMarker(PlaceMarker placeMarker,String ptype)
     {
-      mapView.setMarker(placeMarker.getResults());
-        if(count<1){
+
+      //  mapView.showClusters(placeMarker.getResults());
+        mapView.setMarker(placeMarker.getResults());
+
+        if(count<2){
+
+
             try {
+
                 TimeUnit.SECONDS.sleep(2);
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
+
             fetchRestaurantLocations(token,ptype);
 
         }
+        else
+        {
+
+            mapView.stopProgress();
+        }
+
     }
 
 

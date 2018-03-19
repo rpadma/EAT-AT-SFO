@@ -4,6 +4,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.victor.loading.rotate.RotateLoading
+        android:id="@+id/rotateloading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="94dp"
+        android:layout_marginTop="22dp"
+        android:layout_toEndOf="@+id/arcMenu"
+        app:loading_color="#ffffff"
+        app:loading_width="5dp" />
+
     <com.sa90.materialarcmenu.ArcMenu
         android:id="@+id/arcMenu"
         android:layout_width="wrap_content"

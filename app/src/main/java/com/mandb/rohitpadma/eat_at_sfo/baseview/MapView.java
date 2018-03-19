@@ -14,4 +14,8 @@ public interface MapView {
     public void setCurrentLocation(LatLng currentLocation);
     public void setMarker(List<Result> results);
     public void clearMap();
+    public void showClusters(List<Result> results);
+    public void startProgress();
+    public void stopProgress();
+
 }

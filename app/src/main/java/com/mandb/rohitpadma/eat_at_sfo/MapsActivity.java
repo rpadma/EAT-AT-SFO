@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -16,23 +17,34 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
 import com.mandb.rohitpadma.eat_at_sfo.basemodel.MapPresenterImpl;
 import com.mandb.rohitpadma.eat_at_sfo.baseview.MapView;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
+import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Location;
+import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.PlaceMarkerCluster;
 import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
 import com.mandb.rohitpadma.eat_at_sfo.util.Utility;
+import com.victor.loading.rotate.RotateLoading;
+
 import java.util.HashMap;
 import java.util.List;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,MapView {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,MapView,ClusterManager.OnClusterItemClickListener<Result>,ClusterManager.OnClusterItemInfoWindowClickListener<Result>  {
 
+    @BindView(R.id.rotateloading)
+    RotateLoading progressloader;
     private GoogleMap mMap;
     private UiSettings mUiSettings;
     HashMap<Marker,Result> hmap=new HashMap<>();
     MapPresenterImpl mapPresenter;
+    private ClusterManager<Result> mClusterManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +74,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+        mClusterManager = new ClusterManager<Result>(this, mMap);
+
         mapPresenter=new MapPresenterImpl(MapsActivity.this);
         mapPresenter.getCurrentLocation();
 
-        CameraUpdate cu= CameraUpdateFactory.zoomTo(13);
+        CameraUpdate cu= CameraUpdateFactory.zoomTo(14);
         mMap.animateCamera(cu,500,null);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -73,6 +87,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+
+
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -82,7 +98,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Toast.makeText(MapsActivity.this, "Infowindow clicked", Toast.LENGTH_SHORT).show();
             }
         });
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
@@ -90,9 +106,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
+
+
+
+
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
+        // Add cluster items (markers) to the cluster manager.
+
+
         if(Utility.isNetworkConnected()) {
 
+progressloader.start();
            mapPresenter.fetchRestaurantLocations(AppConfiguration.pagetoken,AppConfiguration.placetype);
+
+
         }
         else
         {
@@ -117,6 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+
     public void showRestaurant(Result r)
     {
         if(r!=null) {
@@ -128,14 +159,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+
+
+
      @Override
     public void setMarker(List<Result> results)
     {
 
+     //   showClusters(results);
 
+        Log.d("Tag",String.valueOf(results.size()));
         for (Result res:results) {
 
             LatLng temp=new LatLng(res.getGeometry().getLocation().getLat(),res.getGeometry().getLocation().getLng());
+
 
             if(res!=null && res.getOpeningHours()!=null &&  res.getOpeningHours().getOpenNow()!=null && res.getOpeningHours().getOpenNow()) {
 
@@ -168,11 +205,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
+
+
+
+    }
+
+
+    public void clearMap() {
+        mMap.clear();
+    }
+
+
+    @Override
+    public void showClusters(List<Result> results) {
+
+
+
+        for (Result res:results) {
+
+            mClusterManager.addItem(res);
+        }
     }
 
     @Override
-    public void clearMap() {
-        mMap.clear();
+    public void startProgress() {
+
+        progressloader.start();
+    }
+
+    @Override
+    public void stopProgress() {
+
+        progressloader.stop();
     }
 
     /**
@@ -212,5 +276,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onWineClick()
     {
         mapPresenter.fetchPlaceByType(AppConfiguration.wplacetype);
+    }
+
+
+
+    @Override
+    public boolean onClusterItemClick(Result result) {
+        showRestaurant(result);
+        return true;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(Result result) {
+        Log.d("results",result.getName());
+        showRestaurant(result);
+
     }
 }

@@ -1,7 +1,9 @@
 package com.mandb.rohitpadma.eat_at_sfo.model.markerpojo;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.maps.android.clustering.ClusterItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,4 +108,5 @@ public class PlaceMarker {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }

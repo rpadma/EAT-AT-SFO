@@ -8,6 +8,21 @@
     android:layout_height="match_parent"
     tools:context="com.mandb.rohitpadma.eat_at_sfo.MapsActivity" >
 
+    <LinearLayout android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        >
+    <com.victor.loading.rotate.RotateLoading
+        android:id="@+id/rotateloading"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        map:loading_color="#56d1ef"
+        android:layout_marginTop="20dp"
+        map:loading_width="5dp" />
+    </LinearLayout>
 
     <com.sa90.materialarcmenu.ArcMenu
         android:id="@+id/arcMenu"
