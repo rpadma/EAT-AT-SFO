@@ -53,7 +53,6 @@ public class SplashActivity extends AppCompatActivity {
         System.gc();
     }
 
-
     private void unbindDrawables(View view) {
         if (view.getBackground() != null) {
             view.getBackground().setCallback(null);

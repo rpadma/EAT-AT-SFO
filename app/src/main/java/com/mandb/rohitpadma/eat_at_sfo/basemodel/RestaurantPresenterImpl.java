@@ -18,32 +18,24 @@ import retrofit2.Response;
 
 public class RestaurantPresenterImpl implements RestaurantPresenter {
 
-
     private IPlaceApi _placeservice;
     Restaurant restaurant;
     public RestaurantView restaurantView;
-
-    public RestaurantPresenterImpl(RestaurantView restaurantView)
-    {
+    public RestaurantPresenterImpl(RestaurantView restaurantView) {
         this.restaurantView=restaurantView;
        this._placeservice = (IPlaceApi) PlaceService.provideUserRestService();
     }
 
-
     @Override
     public void fetchRestaurantdata(String placeid) {
-
         if(Utility.isNetworkConnected()) {
             Call<Restaurant> call = _placeservice.fetchRestaurantDetails(placeid, AppConfiguration.Key);
             call.enqueue(new Callback<Restaurant>() {
                 @Override
                 public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
-
                     restaurant = response.body();
                     restaurantView.setView(restaurant);
-
                 }
-
                 @Override
                 public void onFailure(Call<Restaurant> call, Throwable t) {
 
@@ -98,7 +90,6 @@ public class RestaurantPresenterImpl implements RestaurantPresenter {
 
     @Override
     public void closeAlert() {
-
         restaurantView.closeAlert();
     }
 

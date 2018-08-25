@@ -10,15 +10,10 @@ import com.mandb.rohitpadma.eat_at_sfo.model.restaurantpojo.Restaurant;
 public interface RestaurantView {
 
     public void setView(Restaurant restaurant);
-
     public void callRestaurant(String phoneNumber);
-
     public void shareRestaurant(String url);
-
     public void showToastMessage(String message);
-
     public void showTiming(String[] opentimings);
-
     public void closeAlert();
 
 }

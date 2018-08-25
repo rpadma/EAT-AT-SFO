@@ -5,10 +5,6 @@ package com.mandb.rohitpadma.eat_at_sfo.basepresenter;
  */
 
 public interface MapPresenter {
-
-
     public void getCurrentLocation();
     public void fetchRestaurantLocations(String pageToken,String placeType);
-
-
 }

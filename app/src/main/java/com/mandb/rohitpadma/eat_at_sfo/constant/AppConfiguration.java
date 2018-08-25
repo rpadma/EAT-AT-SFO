@@ -21,9 +21,4 @@ public class AppConfiguration {
     public static String bplacetype="bakery";
     public static String clubplacetype="bar|night_club";
     public static String wplacetype="liquor_store";
-
-
-
-
-
 }

@@ -6,7 +6,6 @@ package com.mandb.rohitpadma.eat_at_sfo.basepresenter;
 
 public interface RestaurantPresenter {
 
-
     public void fetchRestaurantdata(String placeid);
     public void onCallClick();
     public void onShareClick();

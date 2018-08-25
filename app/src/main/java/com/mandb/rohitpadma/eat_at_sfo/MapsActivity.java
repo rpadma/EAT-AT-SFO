@@ -58,9 +58,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -87,9 +84,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
-
-
-
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -106,31 +100,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
-
-
-
-
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
-
         // Add cluster items (markers) to the cluster manager.
-
-
         if(Utility.isNetworkConnected()) {
-
-progressloader.start();
-           mapPresenter.fetchRestaurantLocations(AppConfiguration.pagetoken,AppConfiguration.placetype);
-
-
+            progressloader.start();
+            mapPresenter.fetchRestaurantLocations(AppConfiguration.pagetoken,AppConfiguration.placetype);
         }
         else
         {
             Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show();
-
         }
-
-
     }
 
      @Override
@@ -145,11 +125,7 @@ progressloader.start();
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
-
-
-
-    public void showRestaurant(Result r)
-    {
+    public void showRestaurant(Result r) {
         if(r!=null) {
             Bundle b = new Bundle();
             b.putParcelable("marker", r);
@@ -159,15 +135,10 @@ progressloader.start();
         }
     }
 
-
-
-
      @Override
     public void setMarker(List<Result> results)
     {
-
      //   showClusters(results);
-
         Log.d("Tag",String.valueOf(results.size()));
         for (Result res:results) {
 
@@ -193,21 +164,11 @@ progressloader.start();
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                         .title(res.getName())
                        .snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
-                Marker m =
-                        mMap.addMarker(mo);
-
-
+                Marker m = mMap.addMarker(mo);
                 hmap.put(m, res);
-
             }
 
-
         }
-
-
-
-
-
     }
 
 

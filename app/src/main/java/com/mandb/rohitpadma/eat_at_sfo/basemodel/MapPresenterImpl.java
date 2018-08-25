@@ -1,5 +1,8 @@
 package com.mandb.rohitpadma.eat_at_sfo.basemodel;
 
+import android.os.Handler;
+import android.view.View;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.mandb.rohitpadma.eat_at_sfo.basepresenter.MapPresenter;
 import com.mandb.rohitpadma.eat_at_sfo.baseview.MapView;
@@ -28,8 +31,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MapPresenterImpl implements MapPresenter{
 
-
-
     private IPlaceApi _placeservice;
     public MapView mapView;
     LatLng currentLocation;
@@ -37,13 +38,10 @@ public class MapPresenterImpl implements MapPresenter{
     int count=0;
     List<PlaceMarker> placeMarkerList=new ArrayList<>();
 
-
-    public MapPresenterImpl(MapView mapView)
-    {
+    public MapPresenterImpl(MapView mapView) {
         this.mapView=mapView;
         this._placeservice = (IPlaceApi) PlaceService.provideUserRestService();
         currentLocation= Utility.getcurrentlocation();
-       // currentLocation=new LatLng(AppConfiguration.lat,AppConfiguration.lng);
     }
 
     @Override
@@ -55,16 +53,12 @@ public class MapPresenterImpl implements MapPresenter{
     @Override
     public void fetchRestaurantLocations(String pageToken,final String placeType) {
 
-
-
         Observable<PlaceMarker> placeMarkerObservable =  _placeservice.fetchPlacesrx(String.valueOf(currentLocation.latitude)+","+String.valueOf(currentLocation.longitude),
                 AppConfiguration.radius,placeType,
                 AppConfiguration.Key,
                 pageToken)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
-
-
         placeMarkerObservable.subscribeWith(new Observer<PlaceMarker>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -92,50 +86,31 @@ public class MapPresenterImpl implements MapPresenter{
         });
     }
 
-
     public void fetchPlaceByType(String placeType) {
-
-
         mapView.startProgress();
         mapView.clearMap();
         count = 0;
         mapView.setCurrentLocation(currentLocation);
         fetchRestaurantLocations(AppConfiguration.pagetoken,placeType);
-
     }
 
-
-
-    public void getPlaceMarker(PlaceMarker placeMarker,String ptype)
-    {
-
+    public void getPlaceMarker(PlaceMarker placeMarker,String ptype) {
       //  mapView.showClusters(placeMarker.getResults());
         mapView.setMarker(placeMarker.getResults());
 
         if(count<2){
+            new Handler().postDelayed(new Runnable() {
 
+                @Override
+                public void run() {
+                    mapView.startProgress();
+                }
 
-            try {
-
-                TimeUnit.SECONDS.sleep(2);
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-
+            }, 2);
             fetchRestaurantLocations(token,ptype);
-
         }
-        else
-        {
-
+        else {
             mapView.stopProgress();
         }
-
     }
-
-
-
-
 }

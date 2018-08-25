@@ -49,8 +49,6 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
     TimeAdapter ta;
 
     AlertDialog dialog;
-
-
     Result result;
     ArrayList<String> photourls =new ArrayList<>();
     RestaurantPresenterImpl restaurantPresenter;
@@ -65,7 +63,6 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         {
             result=(Result) getIntent().getExtras().getParcelable("marker");
         }
-
         restaurantPresenter=new RestaurantPresenterImpl(this);
         restaurantPresenter.fetchRestaurantdata(result.getPlaceId());
 
@@ -73,8 +70,7 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
 
 
     @Override
-    public void setView(Restaurant restaurant)
-    {
+    public void setView(Restaurant restaurant) {
 
         if(restaurant.getResult().getPhotos()!=null) {
             for (Photos p : restaurant.getResult().getPhotos()) {
@@ -102,8 +98,6 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         ca.notifyDataSetChanged();
 
     }
-
-
 
     @OnClick(R.id.RestaurantContact)
      public void onCallClick()
@@ -133,8 +127,6 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
 
     }
 
-
-
     @Override
     public void shareRestaurant(String url) {
 
@@ -153,8 +145,6 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
 
     @Override
     public void showTiming(String[] opentimings) {
-
-
         AlertDialog.Builder builder=new AlertDialog.Builder(RestaurantActivity.this);
         builder.setView(R.layout.timinglayout);
 
@@ -163,8 +153,6 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
         dialog.show();
         timinglist=(ListView)dialog.findViewById(R.id.RestaurantTimings);
         btnclose=(ImageButton)dialog.findViewById(R.id.alertcancel);
-
-
         ta=new TimeAdapter(this,R.layout.childtimingview,opentimings);
         ta.setNotifyOnChange(true);
         timinglist.setAdapter(ta);
@@ -187,7 +175,6 @@ public class RestaurantActivity extends AppCompatActivity implements RestaurantV
 
         }
     }
-
 
     @Override
     protected void onDestroy() {
