@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdate;
@@ -49,6 +50,8 @@ public class MapsActivity extends FragmentActivity implements
 
     @BindView(R.id.rotateloading)
     RotateLoading progressloader;
+    @BindView(R.id.custommarker)
+    ImageView customMarkerImage;
     private GoogleMap mMap;
     private UiSettings mUiSettings;
     HashMap<Marker,Result> hmap=new HashMap<>();
@@ -110,8 +113,11 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                Toast.makeText(getApplicationContext(),"MArker",Toast.LENGTH_SHORT).show();
-                return false;
+                marker.showInfoWindow();
+               // Result r=hmap.get(marker);
+               // showRestaurant(r);
+               // Toast.makeText(getApplicationContext(),"MArker",Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
 
@@ -123,6 +129,8 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
             @Override
             public void onCameraMoveStarted(int i) {
+                customMarkerImage.setImageDrawable(getResources().getDrawable(R.drawable.up));
+
             }
         });
 
@@ -130,6 +138,7 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onCameraIdle() {
                 // Cleaning all the markers.
+                customMarkerImage.setImageDrawable(getResources().getDrawable(R.drawable.down));
                 if (mMap != null) {
                     mMap.clear();
                 }
@@ -193,7 +202,6 @@ public class MapsActivity extends FragmentActivity implements
                         .snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
                    Marker m =
                         mMap.addMarker(mo);
-                   m.showInfoWindow();
                 hmap.put(m, res);
             }
             else if(res!=null && res.getOpeningHours()!=null &&  res.getOpeningHours().getOpenNow()!=null && !res.getOpeningHours().getOpenNow())
@@ -204,7 +212,6 @@ public class MapsActivity extends FragmentActivity implements
                         .title(res.getName())
                        .snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
                 Marker m = mMap.addMarker(mo);
-                m.showInfoWindow();
                 hmap.put(m, res);
             }
 
