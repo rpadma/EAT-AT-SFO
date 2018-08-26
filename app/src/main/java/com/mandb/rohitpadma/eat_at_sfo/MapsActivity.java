@@ -2,10 +2,12 @@ package com.mandb.rohitpadma.eat_at_sfo;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,6 +17,7 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -37,7 +40,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,MapView,ClusterManager.OnClusterItemClickListener<Result>,ClusterManager.OnClusterItemInfoWindowClickListener<Result>, GoogleMap.OnCameraMoveListener  {
+public class MapsActivity extends FragmentActivity implements
+        OnMapReadyCallback,MapView,ClusterManager.OnClusterItemClickListener<Result>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<Result>,
+        GoogleMap.OnCameraMoveStartedListener {
 
     @BindView(R.id.rotateloading)
     RotateLoading progressloader;
@@ -46,8 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     HashMap<Marker,Result> hmap=new HashMap<>();
     MapPresenterImpl mapPresenter;
     private ClusterManager<Result> mClusterManager;
-    int xposition;
-    int yposition;
+    Point screenPoint;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +61,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ButterKnife.bind(this);
-        xposition = this.getResources().getDisplayMetrics().widthPixels / 2;
-        yposition = this.getResources().getDisplayMetrics().heightPixels / 2;
+        screenPoint=new Point();
+        screenPoint.x = this.getResources().getDisplayMetrics().widthPixels / 2;
+        screenPoint.y = this.getResources().getDisplayMetrics().heightPixels / 2;
     }
 
     /**
@@ -86,7 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+     /*   mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Result r=hmap.get(marker);
@@ -94,6 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Toast.makeText(MapsActivity.this, "Infowindow clicked", Toast.LENGTH_SHORT).show();
             }
         });
+        */
      mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -105,16 +112,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
         // Add cluster items (markers) to the cluster manager.
-        if(Utility.isNetworkConnected()) {
-            progressloader.start();
-            mapPresenter.fetchRestaurantLocations(AppConfiguration.pagetoken,AppConfiguration.placetype);
-        }
-        else
-        {
-            Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show();
-        }
 
-        Projection myProjection = mMap.getProjection();
+        mMap.setOnCameraMoveStartedListener(this);
+
 
     }
 
@@ -124,13 +124,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      @Override
     public void setCurrentLocation(LatLng currentLocation)
     {
-
        Marker current= mMap.addMarker(new MarkerOptions().position(currentLocation)
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                .title("your location"));
       /*  Marker current= mMap.addMarker(new MarkerOptions().position(currentLocation)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.down)).title("your location"));*/
-      //  current.showInfoWindow();
+        current.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mUiSettings = mMap.getUiSettings();
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -166,6 +165,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                    Marker m =
                         mMap.addMarker(mo);
 
+
+
                 hmap.put(m, res);
             }
             else if(res!=null && res.getOpeningHours()!=null &&  res.getOpeningHours().getOpenNow()!=null && !res.getOpeningHours().getOpenNow())
@@ -180,6 +181,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
         }
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Result r=hmap.get(marker);
+                showRestaurant(r);
+            }
+        });
     }
 
 
@@ -265,8 +274,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+
     @Override
-    public void onCameraMove() {
-        Toast.makeText(this,"show",Toast.LENGTH_SHORT).show();
+    public void onCameraMoveStarted(int i) {
+
+        Projection myProjection = mMap.getProjection();
+        LatLng markerPosition = myProjection.fromScreenLocation(screenPoint);
+
+        if(Utility.isNetworkConnected()) {
+            progressloader.start();
+            mapPresenter.fetchRestaurantLocations(AppConfiguration.pagetoken,AppConfiguration.placetype,markerPosition);
+        }
+        else
+        {
+            Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show();
+        }
+
+       // Toast.makeText(getApplicationContext(),markerPosition.toString(),Toast.LENGTH_SHORT).show();
+       // Log.d("screenpoint",markerPosition.toString());
+       // Log.d("screenpoint",screenPoint.toString());
+
     }
+
+
 }
