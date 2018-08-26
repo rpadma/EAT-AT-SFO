@@ -33,7 +33,7 @@ public class MapPresenterImpl implements MapPresenter{
 
     private IPlaceApi _placeservice;
     public MapView mapView;
-    LatLng currentLocation;
+    public LatLng currentLocation;
     String token;
     int count=0;
     List<PlaceMarker> placeMarkerList=new ArrayList<>();
@@ -44,6 +44,7 @@ public class MapPresenterImpl implements MapPresenter{
         currentLocation= Utility.getcurrentlocation();
     }
 
+
     @Override
     public void getCurrentLocation() {
 
@@ -51,9 +52,10 @@ public class MapPresenterImpl implements MapPresenter{
     }
 
     @Override
-    public void fetchRestaurantLocations(String pageToken,final String placeType) {
+    public void fetchRestaurantLocations(String pageToken, final String placeType, final LatLng LcurrentLocation) {
 
-        Observable<PlaceMarker> placeMarkerObservable =  _placeservice.fetchPlacesrx(String.valueOf(currentLocation.latitude)+","+String.valueOf(currentLocation.longitude),
+        mapView.clearMap();
+        Observable<PlaceMarker> placeMarkerObservable =  _placeservice.fetchPlacesrx(String.valueOf(LcurrentLocation.latitude)+","+String.valueOf(LcurrentLocation.longitude),
                 AppConfiguration.radius,placeType,
                 AppConfiguration.Key,
                 pageToken)
@@ -71,7 +73,7 @@ public class MapPresenterImpl implements MapPresenter{
                 count++;
                 token=placeMarker.getNextPageToken();
                 placeMarkerList.add(placeMarker);
-                getPlaceMarker(placeMarker,placeType);
+                getPlaceMarker(placeMarker,placeType,LcurrentLocation);
             }
 
             @Override
@@ -91,10 +93,10 @@ public class MapPresenterImpl implements MapPresenter{
         mapView.clearMap();
         count = 0;
         mapView.setCurrentLocation(currentLocation);
-        fetchRestaurantLocations(AppConfiguration.pagetoken,placeType);
+        fetchRestaurantLocations(AppConfiguration.pagetoken,placeType,currentLocation);
     }
 
-    public void getPlaceMarker(PlaceMarker placeMarker,String ptype) {
+    public void getPlaceMarker(PlaceMarker placeMarker,String ptype,LatLng currentLocation) {
       //  mapView.showClusters(placeMarker.getResults());
         mapView.setMarker(placeMarker.getResults());
 
@@ -107,7 +109,7 @@ public class MapPresenterImpl implements MapPresenter{
                 }
 
             }, 2);
-            fetchRestaurantLocations(token,ptype);
+            fetchRestaurantLocations(token,ptype,currentLocation);
         }
         else {
             mapView.stopProgress();

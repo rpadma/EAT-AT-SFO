@@ -1,72 +1,97 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.mandb.rohitpadma.eat_at_sfo.MapsActivity" >
+    android:layout_height="match_parent">
 
-    <LinearLayout android:gravity="center"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent"
+        tools:context="com.mandb.rohitpadma.eat_at_sfo.MapsActivity">
 
-        >
-    <com.victor.loading.rotate.RotateLoading
-        android:id="@+id/rotateloading"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        map:loading_color="#56d1ef"
-        android:layout_marginTop="20dp"
-        map:loading_width="5dp" />
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    <com.sa90.materialarcmenu.ArcMenu
-        android:id="@+id/arcMenu"
+            <com.victor.loading.rotate.RotateLoading
+                android:id="@+id/rotateloading"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                map:loading_color="#56d1ef"
+                map:loading_width="5dp" />
+        </LinearLayout>
+
+        <com.sa90.materialarcmenu.ArcMenu
+            android:id="@+id/arcMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|bottom"
+            map:menu_open="arc_right"
+            map:menu_scr="@drawable/search">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/frestaurant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/restau" />
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fbakery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bakery" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fcoffee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/coffee" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fwine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/winebottle" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dancing" />
+
+        </com.sa90.materialarcmenu.ArcMenu>
+    </fragment>
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left|bottom"
-        map:menu_scr="@drawable/search"
-        map:menu_open="arc_right">
+        android:layout_marginBottom="8dp"
+        android:id="@+id/custommarker"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/down"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:src="@drawable/restau"
-            android:layout_height="wrap_content"
-            android:id="@+id/frestaurant"
-            />
-
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:src="@drawable/bakery"
-            android:layout_height="wrap_content"
-            android:id="@+id/fbakery"
-            />
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:src="@drawable/coffee"
-            android:layout_height="wrap_content"
-            android:id="@+id/fcoffee"
-            />
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:src="@drawable/winebottle"
-            android:layout_height="wrap_content"
-            android:id="@+id/fwine"
-            />
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:src="@drawable/dancing"
-            android:layout_height="wrap_content"
-            android:id="@+id/fbar"
-            />
-
-    </com.sa90.materialarcmenu.ArcMenu>
-</fragment>
+</android.support.constraint.ConstraintLayout>

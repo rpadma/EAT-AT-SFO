@@ -2,18 +2,23 @@ package com.mandb.rohitpadma.eat_at_sfo;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -30,21 +35,30 @@ import com.victor.loading.rotate.RotateLoading;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,MapView,ClusterManager.OnClusterItemClickListener<Result>,ClusterManager.OnClusterItemInfoWindowClickListener<Result>  {
+public class MapsActivity extends FragmentActivity implements
+        OnMapReadyCallback,MapView,
+        //ClusterManager.OnClusterItemClickListener<Result>,
+       // ClusterManager.OnClusterItemInfoWindowClickListener<Result>,
+        GoogleMap.OnCameraMoveStartedListener {
 
     @BindView(R.id.rotateloading)
     RotateLoading progressloader;
+    @BindView(R.id.custommarker)
+    ImageView customMarkerImage;
     private GoogleMap mMap;
     private UiSettings mUiSettings;
     HashMap<Marker,Result> hmap=new HashMap<>();
     MapPresenterImpl mapPresenter;
     private ClusterManager<Result> mClusterManager;
+    Point screenPoint;
+    boolean mTimerIsRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +67,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        mapFragment.getView().setClickable(false);
         ButterKnife.bind(this);
-
-
+        screenPoint=new Point();
+        screenPoint.x = this.getResources().getDisplayMetrics().widthPixels / 2;
+        screenPoint.y = this.getResources().getDisplayMetrics().heightPixels / 2;
     }
 
     /**
@@ -89,40 +105,74 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onInfoWindowClick(Marker marker) {
                 Result r=hmap.get(marker);
                 showRestaurant(r);
-                //Toast.makeText(MapsActivity.this, "Infowindow clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, "Infowindow clicked", Toast.LENGTH_SHORT).show();
             }
         });
+
      mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                return false;
+                marker.showInfoWindow();
+               // Result r=hmap.get(marker);
+               // showRestaurant(r);
+               // Toast.makeText(getApplicationContext(),"MArker",Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
 
-        mMap.setOnCameraIdleListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
+      //  mMap.setOnCameraIdleListener(mClusterManager);
+       // mMap.setOnMarkerClickListener(mClusterManager);
         // Add cluster items (markers) to the cluster manager.
-        if(Utility.isNetworkConnected()) {
-            progressloader.start();
-            mapPresenter.fetchRestaurantLocations(AppConfiguration.pagetoken,AppConfiguration.placetype);
-        }
-        else
-        {
-            Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show();
-        }
+
+        //mMap.setOnCameraMoveStartedListener(this);
+        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int i) {
+                customMarkerImage.setImageDrawable(getResources().getDrawable(R.drawable.up));
+
+            }
+        });
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                // Cleaning all the markers.
+                customMarkerImage.setImageDrawable(getResources().getDrawable(R.drawable.down));
+                if (mMap != null) {
+                    mMap.clear();
+                }
+
+              LatLng camerposition=  mMap.getCameraPosition().target;
+                if(Utility.isNetworkConnected()) {
+                    progressloader.start();
+                    mapPresenter.fetchRestaurantLocations(AppConfiguration.pagetoken,AppConfiguration.placetype,camerposition);
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
+
+
+
 
      @Override
     public void setCurrentLocation(LatLng currentLocation)
     {
-
-        Marker current= mMap.addMarker(new MarkerOptions().position(currentLocation)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title("your location"));
+       Marker current= mMap.addMarker(new MarkerOptions().position(currentLocation)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+               .title("your location"));
+      /*  Marker current= mMap.addMarker(new MarkerOptions().position(currentLocation)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.down)).title("your location"));*/
         current.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mUiSettings = mMap.getUiSettings();
         mMap.getUiSettings().setZoomControlsEnabled(true);
+
     }
 
     public void showRestaurant(Result r) {
@@ -136,14 +186,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
      @Override
-    public void setMarker(List<Result> results)
-    {
+    public void setMarker(List<Result> results) {
      //   showClusters(results);
         Log.d("Tag",String.valueOf(results.size()));
         for (Result res:results) {
 
             LatLng temp=new LatLng(res.getGeometry().getLocation().getLat(),res.getGeometry().getLocation().getLng());
-
 
             if(res!=null && res.getOpeningHours()!=null &&  res.getOpeningHours().getOpenNow()!=null && res.getOpeningHours().getOpenNow()) {
 
@@ -154,7 +202,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .snippet(res.getOpeningHours().getOpenNow()?"Opened":"Closed");
                    Marker m =
                         mMap.addMarker(mo);
-
                 hmap.put(m, res);
             }
             else if(res!=null && res.getOpeningHours()!=null &&  res.getOpeningHours().getOpenNow()!=null && !res.getOpeningHours().getOpenNow())
@@ -169,6 +216,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
         }
+
     }
 
 
@@ -180,23 +228,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void showClusters(List<Result> results) {
 
-
-
         for (Result res:results) {
-
             mClusterManager.addItem(res);
         }
     }
 
     @Override
     public void startProgress() {
-
         progressloader.start();
     }
 
     @Override
     public void stopProgress() {
-
         progressloader.stop();
     }
 
@@ -206,9 +249,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
-
 
 
     @OnClick(R.id.frestaurant)
@@ -216,7 +257,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
         mapPresenter.fetchPlaceByType(AppConfiguration.placetype);
     }
-
 
     @OnClick(R.id.fbakery)
     public void onBakeryClick()
@@ -241,7 +281,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-    @Override
+   /* @Override
     public boolean onClusterItemClick(Result result) {
         showRestaurant(result);
         return true;
@@ -252,5 +292,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d("results",result.getName());
         showRestaurant(result);
 
+    }*/
+
+
+    @Override
+    public void onCameraMoveStarted(int i) {
+     /*   Projection myProjection = mMap.getProjection();
+        LatLng markerPosition = myProjection.fromScreenLocation(screenPoint);
+
+        if(Utility.isNetworkConnected()) {
+            progressloader.start();
+            mapPresenter.fetchRestaurantLocations(AppConfiguration.pagetoken,AppConfiguration.placetype,markerPosition);
+        }
+        else
+        {
+            Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show();
+        }*/
+
+       // Toast.makeText(getApplicationContext(),markerPosition.toString(),Toast.LENGTH_SHORT).show();
+       // Log.d("screenpoint",markerPosition.toString());
+       // Log.d("screenpoint",screenPoint.toString());
+
     }
+
+
 }
