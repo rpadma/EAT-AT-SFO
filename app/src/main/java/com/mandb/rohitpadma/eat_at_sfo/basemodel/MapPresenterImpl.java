@@ -33,7 +33,7 @@ public class MapPresenterImpl implements MapPresenter{
 
     private IPlaceApi _placeservice;
     public MapView mapView;
-    LatLng currentLocation;
+    public LatLng currentLocation;
     String token;
     int count=0;
     List<PlaceMarker> placeMarkerList=new ArrayList<>();
@@ -43,6 +43,7 @@ public class MapPresenterImpl implements MapPresenter{
         this._placeservice = (IPlaceApi) PlaceService.provideUserRestService();
         currentLocation= Utility.getcurrentlocation();
     }
+
 
     @Override
     public void getCurrentLocation() {
