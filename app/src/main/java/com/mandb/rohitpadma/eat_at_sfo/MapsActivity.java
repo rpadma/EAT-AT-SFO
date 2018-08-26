@@ -11,6 +11,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -36,7 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,MapView,ClusterManager.OnClusterItemClickListener<Result>,ClusterManager.OnClusterItemInfoWindowClickListener<Result>  {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,MapView,ClusterManager.OnClusterItemClickListener<Result>,ClusterManager.OnClusterItemInfoWindowClickListener<Result>, GoogleMap.OnCameraMoveListener  {
 
     @BindView(R.id.rotateloading)
     RotateLoading progressloader;
@@ -45,7 +46,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     HashMap<Marker,Result> hmap=new HashMap<>();
     MapPresenterImpl mapPresenter;
     private ClusterManager<Result> mClusterManager;
-
+    int xposition;
+    int yposition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +56,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ButterKnife.bind(this);
-
-
+        xposition = this.getResources().getDisplayMetrics().widthPixels / 2;
+        yposition = this.getResources().getDisplayMetrics().heightPixels / 2;
     }
 
     /**
@@ -111,15 +113,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         {
             Toast.makeText(this,"No Internet Connection",Toast.LENGTH_SHORT).show();
         }
+
+        Projection myProjection = mMap.getProjection();
+
     }
+
+
+
 
      @Override
     public void setCurrentLocation(LatLng currentLocation)
     {
 
-        Marker current= mMap.addMarker(new MarkerOptions().position(currentLocation)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title("your location"));
-        current.showInfoWindow();
+       Marker current= mMap.addMarker(new MarkerOptions().position(currentLocation)
+                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+               .title("your location"));
+      /*  Marker current= mMap.addMarker(new MarkerOptions().position(currentLocation)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.down)).title("your location"));*/
+      //  current.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mUiSettings = mMap.getUiSettings();
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -252,5 +263,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d("results",result.getName());
         showRestaurant(result);
 
+    }
+
+    @Override
+    public void onCameraMove() {
+        Toast.makeText(this,"show",Toast.LENGTH_SHORT).show();
     }
 }
