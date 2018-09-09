@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/place_summary"
+    app:behavior_hideable="true"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="5"
+        android:background="@drawable/box"
+        android:padding="10dp"
+        android:id="@+id/options"
+        >
+
+        <ImageView
+            android:id="@+id/fwine"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/winebottle"
+            android:padding="5dp"
+            />
+
+        <ImageView
+            android:id="@+id/fbar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/dancing"
+            android:padding="5dp"
+            />
+
+        <ImageView
+            android:id="@+id/fcoffee"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/coffee"
+            android:padding="5dp"/>
+
+        <ImageView
+            android:id="@+id/frestaurant"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/restau"
+            android:padding="5dp"/>
+
+        <ImageView
+            android:id="@+id/fbakery"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/bakery"
+            android:padding="5dp"/>
+    </LinearLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="540dp">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

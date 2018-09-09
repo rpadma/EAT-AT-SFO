@@ -34,47 +34,59 @@
                 map:loading_width="5dp" />
         </LinearLayout>
 
-        <com.sa90.materialarcmenu.ArcMenu
+      <!--  <com.sa90.materialarcmenu.ArcMenu
             android:id="@+id/arcMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|bottom"
+            android:layout_gravity="bottom"
             map:menu_open="arc_right"
             map:menu_scr="@drawable/search">
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/frestaurant"
+                android:id="@+id/frestaurant1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/restau" />
 
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fbakery"
+                android:id="@+id/fbakery1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/bakery" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fcoffee"
+                android:id="@+id/fcoffee1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/coffee" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fwine"
+                android:id="@+id/fwine1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/winebottle" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fbar"
+                android:id="@+id/fbar1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/dancing" />
 
-        </com.sa90.materialarcmenu.ArcMenu>
+        </com.sa90.materialarcmenu.ArcMenu> -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="left|bottom"
+            android:orientation="vertical" android:id="@+id/tripsummary">
+            <include layout="@layout/bottomsheet" />
+        </LinearLayout>
+
     </fragment>
+
+
 
     <ImageView
         android:layout_width="wrap_content"
@@ -89,5 +101,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

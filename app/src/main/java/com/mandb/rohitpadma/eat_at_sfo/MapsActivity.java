@@ -3,11 +3,15 @@ package com.mandb.rohitpadma.eat_at_sfo;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdate;
@@ -60,6 +64,11 @@ public class MapsActivity extends FragmentActivity implements
     Point screenPoint;
     boolean mTimerIsRunning;
     LatLng camerposition;
+    private BottomSheetBehavior sheetBehavior;
+    @BindView(R.id.place_summary)
+    LinearLayout placeSummary;
+    @BindView(R.id.options)
+    LinearLayout options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +82,7 @@ public class MapsActivity extends FragmentActivity implements
         screenPoint=new Point();
         screenPoint.x = this.getResources().getDisplayMetrics().widthPixels / 2;
         screenPoint.y = this.getResources().getDisplayMetrics().heightPixels / 2;
+        bottomPlaceBehavior();
     }
 
     /**
@@ -315,6 +325,31 @@ public class MapsActivity extends FragmentActivity implements
        // Log.d("screenpoint",screenPoint.toString());
 
     }
+
+
+
+    private void bottomPlaceBehavior() {
+        sheetBehavior = BottomSheetBehavior.from(placeSummary);
+        //LoadFloatingView();
+        (sheetBehavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
+        options.measure(0, 0);
+
+        sheetBehavior.setPeekHeight(options.getMeasuredHeight());
+    }
+
+
+    private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
+        @Override
+        public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        }
+
+        @Override
+        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+        }
+    };
 
 
 }
