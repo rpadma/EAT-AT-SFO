@@ -1,6 +1,7 @@
 package com.mandb.rohitpadma.eat_at_sfo.basemodel;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -88,12 +89,14 @@ public class MapPresenterImpl implements MapPresenter{
         });
     }
 
-    public void fetchPlaceByType(String placeType) {
+    public void fetchPlaceByType(String placeType,LatLng customPosition) {
+
+        Log.d("placetype",placeType);
         mapView.startProgress();
         mapView.clearMap();
         count = 0;
-        mapView.setCurrentLocation(currentLocation);
-        fetchRestaurantLocations(AppConfiguration.pagetoken,placeType,currentLocation);
+        mapView.setCurrentLocation(customPosition);
+        fetchRestaurantLocations(AppConfiguration.pagetoken,placeType,customPosition);
     }
 
     public void getPlaceMarker(PlaceMarker placeMarker,String ptype,LatLng currentLocation) {

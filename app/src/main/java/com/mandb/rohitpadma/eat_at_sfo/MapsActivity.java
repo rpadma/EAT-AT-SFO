@@ -59,6 +59,7 @@ public class MapsActivity extends FragmentActivity implements
     private ClusterManager<Result> mClusterManager;
     Point screenPoint;
     boolean mTimerIsRunning;
+    LatLng camerposition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +144,7 @@ public class MapsActivity extends FragmentActivity implements
                     mMap.clear();
                 }
 
-              LatLng camerposition=  mMap.getCameraPosition().target;
+               camerposition=  mMap.getCameraPosition().target;
                 if(Utility.isNetworkConnected()) {
                     progressloader.start();
                     mapPresenter.fetchRestaurantLocations(AppConfiguration.pagetoken,AppConfiguration.placetype,camerposition);
@@ -171,7 +172,7 @@ public class MapsActivity extends FragmentActivity implements
         current.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mUiSettings = mMap.getUiSettings();
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+       // mMap.getUiSettings().setZoomControlsEnabled(true);
 
     }
 
@@ -255,28 +256,28 @@ public class MapsActivity extends FragmentActivity implements
     @OnClick(R.id.frestaurant)
     public void onRestaurantClick()
     {
-        mapPresenter.fetchPlaceByType(AppConfiguration.placetype);
+        mapPresenter.fetchPlaceByType(AppConfiguration.placetype,camerposition);
     }
 
     @OnClick(R.id.fbakery)
     public void onBakeryClick()
     {
-        mapPresenter.fetchPlaceByType(AppConfiguration.bplacetype);
+        mapPresenter.fetchPlaceByType(AppConfiguration.bplacetype,camerposition);
     }
     @OnClick(R.id.fcoffee)
     public void onCoffeeClick()
     {
-        mapPresenter.fetchPlaceByType(AppConfiguration.cplacetype);
+        mapPresenter.fetchPlaceByType(AppConfiguration.cplacetype,camerposition);
     }
     @OnClick(R.id.fbar)
     public void onBarClick()
     {
-        mapPresenter.fetchPlaceByType(AppConfiguration.clubplacetype);
+        mapPresenter.fetchPlaceByType(AppConfiguration.clubplacetype,camerposition);
     }
     @OnClick(R.id.fwine)
     public void onWineClick()
     {
-        mapPresenter.fetchPlaceByType(AppConfiguration.wplacetype);
+        mapPresenter.fetchPlaceByType(AppConfiguration.wplacetype,camerposition);
     }
 
 
