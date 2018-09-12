@@ -8,10 +8,13 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdate;
@@ -28,6 +31,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.mandb.rohitpadma.eat_at_sfo.adapter.PlaceAdapter;
 import com.mandb.rohitpadma.eat_at_sfo.basemodel.MapPresenterImpl;
 import com.mandb.rohitpadma.eat_at_sfo.baseview.MapView;
 import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
@@ -37,6 +41,7 @@ import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Result;
 import com.mandb.rohitpadma.eat_at_sfo.util.Utility;
 import com.victor.loading.rotate.RotateLoading;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +74,9 @@ public class MapsActivity extends FragmentActivity implements
     LinearLayout placeSummary;
     @BindView(R.id.options)
     LinearLayout options;
+    @BindView(R.id.placeListView)
+    RecyclerView placeListView;
+    PlaceAdapter placeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +90,7 @@ public class MapsActivity extends FragmentActivity implements
         screenPoint=new Point();
         screenPoint.x = this.getResources().getDisplayMetrics().widthPixels / 2;
         screenPoint.y = this.getResources().getDisplayMetrics().heightPixels / 2;
-        bottomPlaceBehavior();
+
     }
 
     /**
@@ -228,6 +236,8 @@ public class MapsActivity extends FragmentActivity implements
 
         }
 
+        setListView(results);
+
     }
 
 
@@ -343,13 +353,35 @@ public class MapsActivity extends FragmentActivity implements
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                customMarkerImage.setVisibility(View.VISIBLE);
             }
+           if(newState == BottomSheetBehavior.STATE_EXPANDED){
+               customMarkerImage.setVisibility(View.INVISIBLE);
+           }
+           if(newState ==BottomSheetBehavior.STATE_DRAGGING){
+                customMarkerImage.setVisibility(View.INVISIBLE);
+           }
+           if(newState == BottomSheetBehavior.STATE_COLLAPSED){
+                customMarkerImage.setVisibility(View.VISIBLE);
+           }
+
         }
 
         @Override
         public void onSlide(@NonNull View bottomSheet, float slideOffset) {
         }
     };
+
+
+    public void setListView(List<Result> listView){
+
+        Log.d("ccount",String.valueOf(listView.size()));
+
+        placeListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+        placeAdapter=new PlaceAdapter(this,listView);
+        placeListView.setAdapter(placeAdapter);
+        bottomPlaceBehavior();
+    }
 
 
 }

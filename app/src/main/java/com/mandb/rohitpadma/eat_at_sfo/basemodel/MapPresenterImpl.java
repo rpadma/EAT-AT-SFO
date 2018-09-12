@@ -103,7 +103,7 @@ public class MapPresenterImpl implements MapPresenter{
       //  mapView.showClusters(placeMarker.getResults());
         mapView.setMarker(placeMarker.getResults());
 
-        if(count<2){
+        if(count<1){
             new Handler().postDelayed(new Runnable() {
 
                 @Override
