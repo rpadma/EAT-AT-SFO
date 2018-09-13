@@ -38,6 +38,7 @@ public class MapPresenterImpl implements MapPresenter{
     String token;
     int count=0;
     List<PlaceMarker> placeMarkerList=new ArrayList<>();
+    List<Result> results=new ArrayList<>();
 
     public MapPresenterImpl(MapView mapView) {
         this.mapView=mapView;
@@ -102,7 +103,7 @@ public class MapPresenterImpl implements MapPresenter{
     public void getPlaceMarker(PlaceMarker placeMarker,String ptype,LatLng currentLocation) {
       //  mapView.showClusters(placeMarker.getResults());
         mapView.setMarker(placeMarker.getResults());
-
+       // results.addAll(placeMarker.getResults());
         if(count<1){
             new Handler().postDelayed(new Runnable() {
 
@@ -115,6 +116,7 @@ public class MapPresenterImpl implements MapPresenter{
             fetchRestaurantLocations(token,ptype,currentLocation);
         }
         else {
+          //  mapView.setPlaceView(results);
             mapView.stopProgress();
         }
     }

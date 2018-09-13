@@ -17,4 +17,5 @@ public interface MapView {
     public void showClusters(List<Result> results);
     public void startProgress();
     public void stopProgress();
+    public void setPlaceView(List<Result> results);
 }

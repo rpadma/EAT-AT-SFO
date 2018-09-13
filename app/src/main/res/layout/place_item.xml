@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/box_place"
+    android:layout_margin="10dp"
+    android:padding="5dp"
+    android:id="@+id/place_view"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="10">
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/restuname"
+            android:text="Resturant Name"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="3.6"
+           android:id="@+id/rrating"
+           android:padding="2dp"
+           android:layout_margin="2dp"
+           android:layout_gravity="center_vertical"
+           />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_gravity="center_vertical"
+                 />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

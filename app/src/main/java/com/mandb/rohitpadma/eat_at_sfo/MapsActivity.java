@@ -236,7 +236,7 @@ public class MapsActivity extends FragmentActivity implements
 
         }
 
-        setListView(results);
+setListView(results);
 
     }
 
@@ -263,6 +263,8 @@ public class MapsActivity extends FragmentActivity implements
     public void stopProgress() {
         progressloader.stop();
     }
+
+
 
     /**
      * Destroy all fragments and loaders.
@@ -379,9 +381,17 @@ public class MapsActivity extends FragmentActivity implements
 
         placeListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
         placeAdapter=new PlaceAdapter(this,listView);
+        placeAdapter.notifyDataSetChanged();
         placeListView.setAdapter(placeAdapter);
+
         bottomPlaceBehavior();
     }
 
+    @Override
+    public void setPlaceView(List<Result> listView) {
+
+        setListView(listView);
+
+    }
 
 }
