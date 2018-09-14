@@ -57,6 +57,13 @@ public class MapsActivity extends FragmentActivity implements
        // ClusterManager.OnClusterItemInfoWindowClickListener<Result>,
         GoogleMap.OnCameraMoveStartedListener {
 
+    @BindView(R.id.fwine) ImageView winesIv;
+    @BindView(R.id.fbar) ImageView barIv;
+    @BindView(R.id.fcoffee) ImageView coffeeIv;
+    @BindView(R.id.frestaurant) ImageView restaurantIv;
+    @BindView(R.id.fbakery) ImageView bakeryIv;
+
+
     @BindView(R.id.rotateloading)
     RotateLoading progressloader;
     @BindView(R.id.custommarker)
@@ -77,6 +84,7 @@ public class MapsActivity extends FragmentActivity implements
     @BindView(R.id.placeListView)
     RecyclerView placeListView;
     PlaceAdapter placeAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,27 +286,37 @@ setListView(results);
     @OnClick(R.id.frestaurant)
     public void onRestaurantClick()
     {
+        resetBackground();
+        restaurantIv.setBackground(getDrawable(R.drawable.circle_selected));
         mapPresenter.fetchPlaceByType(AppConfiguration.placetype,camerposition);
     }
 
     @OnClick(R.id.fbakery)
     public void onBakeryClick()
     {
+        resetBackground();
+        bakeryIv.setBackground(getDrawable(R.drawable.circle_selected));
         mapPresenter.fetchPlaceByType(AppConfiguration.bplacetype,camerposition);
     }
     @OnClick(R.id.fcoffee)
     public void onCoffeeClick()
     {
+        resetBackground();
+        coffeeIv.setBackground(getDrawable(R.drawable.circle_selected));
         mapPresenter.fetchPlaceByType(AppConfiguration.cplacetype,camerposition);
     }
     @OnClick(R.id.fbar)
     public void onBarClick()
     {
+        resetBackground();
+        barIv.setBackground(getDrawable(R.drawable.circle_selected));
         mapPresenter.fetchPlaceByType(AppConfiguration.clubplacetype,camerposition);
     }
     @OnClick(R.id.fwine)
     public void onWineClick()
     {
+        resetBackground();
+        winesIv.setBackground(getDrawable(R.drawable.circle_selected));
         mapPresenter.fetchPlaceByType(AppConfiguration.wplacetype,camerposition);
     }
 
@@ -392,6 +410,16 @@ setListView(results);
 
         setListView(listView);
 
+    }
+
+
+    public void resetBackground(){
+
+       winesIv.setBackground(getDrawable(R.drawable.circle_back));
+       barIv.setBackground(getDrawable(R.drawable.circle_back));
+       coffeeIv.setBackground(getDrawable(R.drawable.circle_back));
+       restaurantIv.setBackground(getDrawable(R.drawable.circle_back));
+       bakeryIv.setBackground(getDrawable(R.drawable.circle_back));
     }
 
 }
