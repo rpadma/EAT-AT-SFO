@@ -15,9 +15,14 @@ import android.widget.Toast;
 
 import com.mandb.rohitpadma.eat_at_sfo.R;
 import com.mandb.rohitpadma.eat_at_sfo.RestaurantActivity;
+import com.mandb.rohitpadma.eat_at_sfo.constant.AppConfiguration;
+import com.mandb.rohitpadma.eat_at_sfo.model.markerpojo.Photo;
+import com.mandb.rohitpadma.eat_at_sfo.model.restaurantpojo.Photos;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by rohitpadma on 3/6/18.
@@ -35,10 +40,10 @@ public class Imagedapter extends RecyclerView.Adapter<Imagedapter.ViewHolder>{
     public Imagedapter(ArrayList<String> colist,Context context)
     {
         this.colist=colist;
-
         this.context=context;
 
     }
+
 
 
 public class ViewHolder extends RecyclerView.ViewHolder {
