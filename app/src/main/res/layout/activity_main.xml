@@ -7,6 +7,7 @@
     tools:context="com.mandb.rohitpadma.eat_at_sfo.SplashActivity"
     android:orientation="vertical"
     android:id="@+id/splashlayout"
+    android:background="#fad593"
     >
 
     <LinearLayout
@@ -18,17 +19,20 @@
         >
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_animation_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:lottie_autoPlay="true"
             app:lottie_fileName="lottie.json"
             app:lottie_loop="true" />
+
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="80px"
             android:src="@drawable/sfolarge"
+            android:visibility="gone"
             />
 
 

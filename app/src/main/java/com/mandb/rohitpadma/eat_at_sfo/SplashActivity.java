@@ -20,13 +20,13 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-        mLottieAnimationView = findViewById(R.id.lottie_animation_view);
+       mLottieAnimationView = findViewById(R.id.lottie_animation_view);
 
         LottieComposition.Factory.fromAssetFileName(this, "lottie.json", composition -> {
             mLottieAnimationView.setComposition(composition);
             mLottieAnimationView.playAnimation();  });
 
-        Thread runnerlog=new Thread()
+       Thread runnerlog=new Thread()
         {
             public void run()
             {
@@ -35,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
                     int logoTimer=0;
-                    while(logoTimer<2000)
+                    while(logoTimer<4000)
                     {
                         sleep(100);
                         logoTimer=logoTimer+100;
@@ -64,6 +64,8 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().post(() -> {
 
         });
+
+
     }
 
 
