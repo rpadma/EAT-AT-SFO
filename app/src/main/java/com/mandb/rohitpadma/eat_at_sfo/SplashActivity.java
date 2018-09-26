@@ -35,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
                     int logoTimer=0;
-                    while(logoTimer<4000)
+                    while(logoTimer<3000)
                     {
                         sleep(100);
                         logoTimer=logoTimer+100;

@@ -19,61 +19,88 @@
         android:orientation="horizontal"
         android:weightSum="5"
         android:background="@drawable/box"
-        android:padding="10dp"
-        android:id="@+id/options"
-        >
 
+        android:id="@+id/options"
+        android:layout_gravity="center"
+        >
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_weight="1">
         <ImageView
             android:id="@+id/fwine"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:padding="1dp"
-            android:layout_weight="1"
             android:src="@drawable/winebottle"
             android:layout_margin="5dp"
             android:background="@drawable/circle_back"
             />
+</LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
         <ImageView
             android:id="@+id/fbar"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_weight="1"
             android:src="@drawable/dancing"
             android:layout_margin="5dp"
             android:background="@drawable/circle_back"
             android:padding="1dp"
             />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
         <ImageView
             android:id="@+id/fcoffee"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_weight="1"
+
             android:src="@drawable/coffee"
             android:layout_margin="5dp"
             android:padding="1dp"
             android:background="@drawable/circle_back"/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1">
         <ImageView
             android:id="@+id/frestaurant"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_weight="1"
+
             android:src="@drawable/restau"
             android:layout_margin="5dp"
             android:padding="1dp"
             android:background="@drawable/circle_back"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
         <ImageView
             android:id="@+id/fbakery"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_weight="1"
             android:src="@drawable/bakery"
             android:layout_margin="5dp"
-            android:padding="1dp"
+            android:padding="2dp"
             android:background="@drawable/circle_back"/>
+        </LinearLayout>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

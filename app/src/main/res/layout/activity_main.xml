@@ -7,7 +7,7 @@
     tools:context="com.mandb.rohitpadma.eat_at_sfo.SplashActivity"
     android:orientation="vertical"
     android:id="@+id/splashlayout"
-    android:background="#fad593"
+    android:background="#178ee9"
     >
 
     <LinearLayout
