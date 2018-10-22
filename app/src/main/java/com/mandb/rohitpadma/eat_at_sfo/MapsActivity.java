@@ -272,8 +272,6 @@ setListView(results);
         progressloader.stop();
     }
 
-
-
     /**
      * Destroy all fragments and loaders.
      */
@@ -356,8 +354,6 @@ setListView(results);
 
     }
 
-
-
     private void bottomPlaceBehavior() {
         sheetBehavior = BottomSheetBehavior.from(placeSummary);
         //LoadFloatingView();
@@ -366,7 +362,6 @@ setListView(results);
 
         sheetBehavior.setPeekHeight(options.getMeasuredHeight());
     }
-
 
     private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
         @Override
@@ -394,27 +389,19 @@ setListView(results);
 
 
     public void setListView(List<Result> listView){
-
         Log.d("ccount",String.valueOf(listView.size()));
-
         placeListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
         placeAdapter=new PlaceAdapter(this,listView);
         placeAdapter.notifyDataSetChanged();
         placeListView.setAdapter(placeAdapter);
-
         bottomPlaceBehavior();
     }
 
     @Override
     public void setPlaceView(List<Result> listView) {
-
         setListView(listView);
-
     }
-
-
     public void resetBackground(){
-
        winesIv.setBackground(getDrawable(R.drawable.circle_back));
        barIv.setBackground(getDrawable(R.drawable.circle_back));
        coffeeIv.setBackground(getDrawable(R.drawable.circle_back));
