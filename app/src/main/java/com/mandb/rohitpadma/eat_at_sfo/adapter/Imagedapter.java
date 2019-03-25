@@ -97,6 +97,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                 ViewGroup.LayoutParams layoutParams=tabIndicator.getLayoutParams();
                 layoutParams.width=getItemCount()*50;
                 tabIndicator.setLayoutParams(layoutParams);
+                viewPager.setCurrentItem(position);
                 dialog.setCancelable(true);
 
             }
