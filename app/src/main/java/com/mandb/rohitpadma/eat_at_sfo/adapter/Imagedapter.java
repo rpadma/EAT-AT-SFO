@@ -2,6 +2,8 @@ package com.mandb.rohitpadma.eat_at_sfo.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,10 +43,7 @@ public class Imagedapter extends RecyclerView.Adapter<Imagedapter.ViewHolder>{
     {
         this.colist=colist;
         this.context=context;
-
     }
-
-
 
 public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -53,17 +52,12 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
 
     public ViewHolder(View v) {
-
         super(v);
         imgview=(ImageView)v.findViewById(R.id.RestaurantPhoto);
-
-
       }
-
      }
 
-
-        public static interface Callback{
+     public static interface Callback{
           void showPhoto(int position);
         }
 
@@ -72,8 +66,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.childimageview, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
-
-
     }
 
     @Override
@@ -82,8 +74,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         String s = colist.get(position);
 
         if (s.length() > 0) {
-
-            // holder.imagecview.setBackground(null);
             Picasso.with(holder.imgview.getContext()).load(s).fit().placeholder(R.drawable.imageloading).into(holder.imgview);
         }
 
@@ -92,9 +82,22 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
 
-                //callback.showPhoto(position);
-
-           setimage(position);
+                AlertDialog.Builder builder=new AlertDialog.Builder(holder.imgview.getContext());
+                builder.setView(R.layout.image_viewer);
+                dialog = builder.create();
+                dialog.getWindow().setLayout(500,500);
+                dialog.show();
+                final ViewPager viewPager=(ViewPager)dialog.findViewById(R.id.imagePager);
+                final TabLayout tabIndicator=(TabLayout)dialog.findViewById(R.id.tab_indicator);
+                ImageViewPager imageViewPager=new ImageViewPager(colist,context,viewPager);
+                viewPager.setAdapter(imageViewPager);
+                viewPager.setPageMargin(20);
+                tabIndicator.setupWithViewPager(viewPager, true);
+                tabIndicator.setTabGravity(TabLayout.GRAVITY_CENTER);
+                ViewGroup.LayoutParams layoutParams=tabIndicator.getLayoutParams();
+                layoutParams.width=getItemCount()*50;
+                tabIndicator.setLayoutParams(layoutParams);
+                dialog.setCancelable(true);
 
             }
         });
@@ -109,11 +112,15 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         final int currentposition=position;
         cu=position;
         AlertDialog.Builder builder=new AlertDialog.Builder(context);
-        builder.setView(R.layout.imagelayout);
+        builder.setView(R.layout.image_viewer);
         dialog = builder.create();
         dialog.show();
 
-        final ImageView iv=(ImageView)dialog.findViewById(R.id.photoview);
+        final ViewPager viewPager=(ViewPager)dialog.findViewById(R.id.imagePager);
+        ImageViewPager imageViewPager=new ImageViewPager(colist,context,viewPager);
+        viewPager.setAdapter(imageViewPager);
+
+      /*  final ImageView iv=(ImageView)dialog.findViewById(R.id.photoview);
         setphotoview(iv,0);
 
         final ImageView previousiv=(ImageView)dialog.findViewById(R.id.ivprevious);
@@ -137,7 +144,9 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
                 setphotoview(iv,1);
             }
-        });
+        }); */
+
+
     }
     public void setphotoview(ImageView iv,int val)
     {

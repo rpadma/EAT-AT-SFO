@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <android.support.v4.view.ViewPager
+        android:id="@+id/imagePager"
+        android:layout_width="300dp"
+        android:layout_height="300dp">
+    </android.support.v4.view.ViewPager>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_indicator"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center"
+        app:tabBackground="@drawable/tab_background"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"></android.support.design.widget.TabLayout>
+
+</LinearLayout>

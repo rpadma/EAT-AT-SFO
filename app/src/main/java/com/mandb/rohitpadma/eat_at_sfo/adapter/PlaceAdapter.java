@@ -91,8 +91,6 @@ public class PlaceAdapter extends  RecyclerView.Adapter<PlaceAdapter.ViewHolder>
             photo=(ImageView)itemView.findViewById(R.id.resPhoto);
             placeHolder=(LinearLayout)itemView.findViewById(R.id.place_view);
             restuaddress=(TextView)itemView.findViewById(R.id.restuaddress);
-
-
         }
     }
 }
